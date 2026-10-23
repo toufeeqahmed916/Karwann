@@ -7,7 +7,7 @@
 <!-- UPDATE THESE TWO LINKS -->
 <a href="https://karwann-frontend.vercel.app/"><img alt="Live demo" src="https://img.shields.io/badge/%E2%96%B6%20LIVE%20DEMO-C4F135?style=for-the-badge&labelColor=16181D&color=C4F135&logoColor=16181D"></a>
 &nbsp;&nbsp;
-<a href="https://drive.google.com/file/d/16wBSfLdvNsXsoPN1FEJ6VLbRNtVhozs7/view"><img alt="Demo video" src="https://img.shields.io/badge/%E2%96%B6%20DEMO%20VIDEO-FF4D4D?style=for-the-badge&labelColor=16181D&color=FF4D4D"></a>
+<a href="https://drive.google.com/file/d/1Ldt0wV48eKtU-0Qj6CzQJg1PoQ1Zbm8p/view?usp=sharing"><img alt="Demo video" src="https://img.shields.io/badge/%E2%96%B6%20DEMO%20VIDEO-FF4D4D?style=for-the-badge&labelColor=16181D&color=FF4D4D"></a>
 &nbsp;&nbsp;
 <a href="docs/KARWAN_2_HANDOFF.md"><img alt="Docs" src="https://img.shields.io/badge/DOCS-16181D?style=for-the-badge&labelColor=16181D&color=3a4256"></a>
 
