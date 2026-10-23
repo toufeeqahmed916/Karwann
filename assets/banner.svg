@@ -14,7 +14,6 @@
 <text x="246" y="81" font-size="13" font-weight="800" fill="#101319" text-anchor="middle" letter-spacing="2.5">RELIEF OS</text>
 <text x="188" y="150" font-size="76" font-weight="800" fill="#F4F4EE" letter-spacing="-2">Karwan</text>
 <text x="62" y="204" font-size="26" font-weight="600" fill="#F4F4EE" fill-opacity=".9">Disaster Relief Resource Optimizer</text>
-<text x="62" y="236" font-size="16" fill="#8A8F98">Problem CL-03  ·  prioritise, allocate, dispatch, track</text>
 <text x="60" y="296" font-size="38" font-weight="800" fill="#F4F4EE" opacity="0">Right help.<animate attributeName="opacity" from="0" to="1" begin="0.3s" dur=".5s" fill="freeze"/><animate attributeName="x" from="40" to="60" begin="0.3s" dur=".5s" fill="freeze"/></text>
 <text x="60" y="338" font-size="38" font-weight="800" fill="#C4F135" opacity="0">Right place.<animate attributeName="opacity" from="0" to="1" begin="0.9s" dur=".5s" fill="freeze"/><animate attributeName="x" from="40" to="60" begin="0.9s" dur=".5s" fill="freeze"/></text>
 <text x="60" y="380" font-size="38" font-weight="800" fill="#F4F4EE" opacity="0">Right now.<animate attributeName="opacity" from="0" to="1" begin="1.5s" dur=".5s" fill="freeze"/><animate attributeName="x" from="40" to="60" begin="1.5s" dur=".5s" fill="freeze"/></text>
