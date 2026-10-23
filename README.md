@@ -5,7 +5,7 @@
 <br>
 
 <!-- UPDATE THESE TWO LINKS -->
-<a href="[https://karwan-front.vercel.app/](https://karwann-frontend.vercel.app/)"><img alt="Live demo" src="https://img.shields.io/badge/%E2%96%B6%20LIVE%20DEMO-C4F135?style=for-the-badge&labelColor=16181D&color=C4F135&logoColor=16181D"></a>
+<a href="https://karwann-front.vercel.app/"><img alt="Live demo" src="https://img.shields.io/badge/%E2%96%B6%20LIVE%20DEMO-C4F135?style=for-the-badge&labelColor=16181D&color=C4F135&logoColor=16181D"></a>
 &nbsp;&nbsp;
 <a href="https://drive.google.com/file/d/16wBSfLdvNsXsoPN1FEJ6VLbRNtVhozs7/view"><img alt="Demo video" src="https://img.shields.io/badge/%E2%96%B6%20DEMO%20VIDEO-FF4D4D?style=for-the-badge&labelColor=16181D&color=FF4D4D"></a>
 &nbsp;&nbsp;
