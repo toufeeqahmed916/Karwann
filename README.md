@@ -14,8 +14,6 @@
 <br><br>
 
 ![DITE Hackathon](https://img.shields.io/badge/DITE_Hackathon-2026--27-C4F135?style=flat-square&labelColor=16181D)
-![Category](https://img.shields.io/badge/Category_4-Climate_%26_Disaster_Resilience-16181D?style=flat-square&labelColor=16181D&color=C4F135)
-![Problem](https://img.shields.io/badge/Problem-CL--03-16181D?style=flat-square&labelColor=16181D&color=C4F135)
 ![React](https://img.shields.io/badge/React_18-16181D?style=flat-square&logo=react&logoColor=C4F135)
 ![Node](https://img.shields.io/badge/Node_22-16181D?style=flat-square&logo=nodedotjs&logoColor=C4F135)
 ![Express](https://img.shields.io/badge/Express_5-16181D?style=flat-square&logo=express&logoColor=C4F135)
@@ -65,11 +63,11 @@ Also: [Screenshots](#screenshots) · [Features](#features) · [PRD](#product-req
 
 ## 2. Theme and problem
 
-**Theme:** Category 4, **Climate & Disaster Resilience**. Problem statement **CL-03: Disaster Relief Resource Optimizer**.
+**Theme:** **Public Service**. Problem statement **Disaster Relief Resource Optimizer**.
 
 **The problem.** In a flood, relief is often misplaced rather than only short: requests arrive as calls and messages, depot stock lives in notebooks, and trucks have limits, so supplies go to whoever called first or sits closest while the worst-hit, hardest-to-reach villages wait longest. Karwan matches requests with stock and trucks, ranks need with a transparent score, recommends a fair, explainable allocation, and tracks delivery to the doorstep. Karwan 2.0 also lets people report in **Urdu or English by text or voice**, which is how reports really arrive.
 
-> **CL-03 brief:** *Build a coordination platform that matches requests for relief with available resources and recommends how limited supplies should be allocated across affected locations.*
+> **Public Service:** *Build a coordination platform that matches requests for relief with available resources and recommends how limited supplies should be allocated across affected locations.*
 
 ## 3. How AI is used
 
@@ -221,7 +219,7 @@ Open http://localhost:5173, press **Open demo as Coordinator**, and follow the [
 
 ## Features
 
-### Core (the MVP from the brief)
+### Core:
 
 | Expected MVP | Status | Where |
 |---|:--:|---|
@@ -232,7 +230,7 @@ Open http://localhost:5173, press **Open demo as Coordinator**, and follow the [
 | Show allocation status and delivery progress | ✅ | `/dashboard`, `/tracker`: KPIs, pipeline, markers, routes, moving trucks |
 | Show how allocations change when supplies or needs change | ✅ | `/simulator`: six what-if actions with before/after |
 
-### Karwan 2.0: the AI layer
+### Karwan: the AI layer
 
 - **Report by text or voice, in Urdu or English** → editable form with per-field confidence and an "Estimate" label for derived people counts → a person confirms → the existing API saves and scores it. **Nothing is saved before Confirm.**
 - **Coordinator assistant** (`/assistant`): ask about requests, scores, stock, allocations and deliveries. Exact stored numbers, source IDs, read-aloud, voice questions, and a fixed refusal for anything else.
@@ -241,7 +239,7 @@ Open http://localhost:5173, press **Open demo as Coordinator**, and follow the [
 - **Open demo as Coordinator** for judges, with no login.
 - **Resilient by design**: manual form always works, friendly errors with retry, two-key quota fail-over, request tracing with `X-Request-Id`.
 
-### Beyond the MVP
+### Beyond:
 
 - **What-if simulator** with six actions: reduce or add stock, raise a population, add a request, change depot capacity, block a road zone. Apply or undo.
 - **Five map heat layers**: Need, Urgency, Supply gap, Delivery delay, Accessibility.
