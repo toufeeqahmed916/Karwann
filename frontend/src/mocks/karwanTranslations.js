@@ -1,0 +1,303 @@
+/**
+ * Karwan translations.
+ * Mini markup used in some strings:
+ *   "|"      -> line break
+ *   "*text*" -> highlighted <span>text</span>
+ * Rendered by the rich() helper inside Karwan.jsx
+ */
+
+export const translations = {
+  en: {
+    dir: 'ltr',
+    langButton: 'اردو',
+    langButtonLabel: 'Switch to Urdu',
+    pageTitle: 'Karwan — Relief, delivered with purpose',
+    brand: 'karwan',
+    tag: 'RELIEF OS',
+    brandLabel: 'Karwan home',
+    nav: { platform: 'Platform', how: 'How it works', impact: 'Our impact', demo: 'Live demo' },
+    submit: 'Submit a request',
+    submitHero: 'Submit a request ↗',
+    openMenu: 'Open menu',
+
+    slides: [
+      { title: 'Right help.|*Right place.*|Right now.', desc: 'When every minute matters, Karwan helps relief teams make clearer decisions and move essential supplies where they can make the biggest difference.', stat: '12 locations', label: 'connected across flood-affected Sindh' },
+      { title: 'When needs rise,|*clarity matters.*', desc: 'Bring urgent requests, stock levels and delivery capacity into one shared operational picture.', stat: '4 supply types', label: 'food · water · medicine · shelter kits' },
+      { title: 'Every request|has a *reason.*', desc: 'Transparent priority scores help coordinators understand which needs require attention first—and why.', stat: '5 priority factors', label: 'from urgency to accessibility' },
+      { title: 'From depot|to *doorstep.*', desc: 'Connect available inventory with relief requests and follow each delivery along its planned route.', stat: '3 demo depots', label: 'Hyderabad · Sukkur · Karachi' },
+      { title: 'Make every|resource *count.*', desc: 'Test changing conditions, compare allocation outcomes and adapt plans when demand or supply shifts.', stat: 'One mission', label: 'the right help, in the right order' },
+    ],
+    heroSlides: 'Hero slides',
+    slideN: (n) => `Slide ${n}`,
+
+    ticker: ['SUPPLIES WITH PURPOSE', 'DECISIONS YOU CAN EXPLAIN', 'EVERY DELIVERY COUNTS', 'BUILT FOR HUMAN IMPACT'],
+
+    platform: {
+      kicker: 'One platform. One shared picture.',
+      title: 'Many moving parts.|One clear mission.',
+      desc: 'Karwan connects field requests, warehouse inventory and delivery capacity—so coordinators can turn limited resources into better-informed decisions.',
+    },
+    services: [
+      { num: '01 / REQUESTS', title: 'Every need, visible', desc: 'Collect requests by location, urgency, affected people, accessibility and essential supplies.' },
+      { num: '02 / INVENTORY', title: 'Know what’s available', desc: 'See stock levels, available vehicles and daily depot capacity in one coordinated view.' },
+      { num: '03 / PRIORITY', title: 'Priorities with a reason', desc: 'Understand why a request ranks where it does, with a transparent score breakdown.' },
+      { num: '04 / ALLOCATION', title: 'Fairer allocation', desc: 'Recommend supply splits when demand exceeds stock, and show what remains unfulfilled.' },
+      { num: '05 / ROUTES', title: 'From depot to destination', desc: 'Follow delivery progress, route information and estimated arrival across relief locations.' },
+      { num: '06 / SIMULATION', title: 'Plan for what changes', desc: 'Test a new emergency, reduced stock or blocked route, then compare the allocation impact.' },
+    ],
+
+    safety: {
+      imageLabel: 'Community support and humanitarian aid',
+      title: 'Every decision should have a reason.',
+      desc: 'When resources are limited, a dashboard should do more than show numbers. Karwan makes the why visible—from priority factors to partial allocations—so coordinators can understand and explain each recommendation.',
+      button: 'See the coordination view ↗',
+      metrics: ['priority factors', 'essential supply types', 'demo depots', 'shared mission'],
+    },
+
+    dashboard: {
+      kicker: 'A closer look',
+      title: 'See the situation.|Act with clarity.',
+      desc: 'A sample coordination view for the Karwan hackathon prototype. The locations and figures below are illustrative demo data—not live emergency information.',
+      overview: 'Relief operations overview',
+      live: 'Demo simulation',
+      mapLabel: 'Illustrative map showing relief locations',
+      sukkur: 'SUKKUR DEPOT', dadu: 'DADU', hyderabad: 'HYDERABAD DEPOT', badin: 'BADIN',
+      truck: 'Simulated truck',
+      legend: { critical: 'Critical', high: 'High', transit: 'In transit', delivered: 'Delivered' },
+      note: 'Illustrative route · simulated truck movement',
+      refresh: 'Refresh route ↻',
+      refreshToast: 'Demo route refreshed. No real dispatch was made.',
+      kpis: [['Active requests', '12'], ['People awaiting help', '8.4k'], ['Deliveries in progress', '06'], ['Critical shortages', '04']],
+      queue: 'Priority queue',
+      demoData: 'Demo data ↗',
+      requests: [
+        { title: 'Dadu · Request #104', sub: 'Water · 2,400 people affected', status: 'CRITICAL' },
+        { title: 'Sehwan · Request #108', sub: 'Medicine · hard to reach', status: 'HIGH' },
+        { title: 'Badin · Request #112', sub: 'Shelter kits · waiting', status: 'WAITING' },
+      ],
+    },
+
+    impact: {
+      kicker: 'The reason behind the system',
+      title: 'Technology should|move humanity forward.',
+      desc: 'Behind every request is a family, a community and a need that cannot wait. Better coordination helps relief teams use what they have more thoughtfully.',
+      storyAlt: 'Volunteers working together to support a community',
+      storyKicker: 'The people behind the numbers',
+      storyTitle: 'Relief is more than moving supplies.',
+      storyDesc: 'It’s about understanding the need, making the best available decision and keeping every team aligned around the people who need help.',
+      storyButton: 'Explore the idea ↗',
+      card1: { kicker: 'Designed for transparency', title: 'Explain the recommendation.', desc: 'Priority factors, allocation quantities and unfulfilled needs should be understandable—not hidden behind a score.', button: 'Try the simulator ↗' },
+      card2: { kicker: 'Made for changing conditions', title: 'When the situation changes, plans should too.', desc: 'Test a new emergency or a stock shortage and compare how a reallocation could change fulfilment.', button: 'See what-if planning ↗' },
+      news: [
+        { alt: 'Relief supplies prepared for distribution', tag: '01 · Preparedness', title: 'Make limited supplies count.', desc: 'Inventory visibility helps teams understand what can be sent and where a shortfall remains.' },
+        { alt: 'Community receiving humanitarian support', tag: '02 · Coordination', title: 'Put urgent needs in view.', desc: 'A shared request queue helps relief coordinators see urgency, vulnerability and waiting time together.' },
+        { alt: 'Children in a community supported by aid', tag: '03 · Human impact', title: 'Keep the people at the centre.', desc: 'Behind each marker is a real-world need. The interface should make that impossible to forget.' },
+      ],
+    },
+
+    sim: {
+      eyebrow: 'Interactive concept demo',
+      title: 'What if the situation changes?',
+      desc: 'Adjust the demo conditions to see a sample fulfilment estimate react. This is a front-end illustration of Karwan’s what-if concept, not the production allocation algorithm.',
+      baseline: 'Illustrative baseline',
+      fcfs: 'First-come-first-served: 61%',
+      karwan: 'Karwan: 84%',
+      panel: 'What-if simulator',
+      interactive: 'Interactive',
+      demand: 'Demand increase',
+      stock: 'Available stock',
+      capacity: 'Delivery capacity',
+      fulfilment: 'Estimated fulfilment',
+      gap: 'Estimated supply gap',
+      msgOk: 'Stock and capacity are balanced for this demo scenario.',
+      msgMid: 'A supply gap is emerging. Review depot stock or delivery capacity.',
+      msgLow: 'This scenario creates a major shortfall. Prioritise critical and vulnerable requests.',
+      reset: 'Reset scenario ↻',
+      resetToast: 'Demo scenario reset.',
+    },
+
+    flow: {
+      kicker: 'Built around the real workflow',
+      title: 'From a request to a delivery.',
+      desc: 'One connected flow for field reporters, depot managers, coordinators and drivers—with a simple role switch in the MVP.',
+      steps: [
+        { num: 'STEP 01', title: 'Report a need', desc: 'Submit an affected area, urgency level, vulnerable groups and required supplies.' },
+        { num: 'STEP 02', title: 'Prioritise fairly', desc: 'Review the score: urgency 35%, affected people 25%, vulnerability 15%, waiting 15%, accessibility 10%.' },
+        { num: 'STEP 03', title: 'Allocate and track', desc: 'Review recommended quantities, approve dispatch and track the simulated journey to delivery.' },
+      ],
+    },
+
+    footer: {
+      tagline: 'Right supplies, to the right people, in the right order—and a clear reason why.',
+      badge: 'CL-03 · Disaster Relief Resource Optimizer',
+      explore: 'Explore', platform: 'The platform', ops: 'Operations view', sim: 'What-if simulator',
+      workflows: 'Workflows', reqPriority: 'Requests & priority', invRoutes: 'Inventory & routes', human: 'Human impact',
+      prototype: 'Prototype', top: 'Back to top ↑', about: 'About this demo', sample: 'Submit a sample request',
+      aboutToast: 'This is a front-end prototype using illustrative data.',
+      copyright: '© 2026 Karwan · Hackathon MVP prototype',
+      disclaimer: 'Illustrative data only · Not an emergency-response service',
+    },
+
+    modal: {
+      kicker: 'Requester portal · prototype',
+      title: 'Tell us what’s needed.',
+      desc: 'Submit an illustrative request to preview the requester flow. This prototype does not send information to a server or emergency service.',
+      area: 'Affected area',
+      areaPlaceholder: 'e.g. Dadu',
+      urgency: 'Urgency',
+      need: 'Most urgent supply',
+      submit: 'Preview request ↗',
+      close: 'Close dialog',
+    },
+    urgencyOptions: { Critical: 'Critical', High: 'High', Medium: 'Medium', Low: 'Low' },
+    needOptions: { Water: 'Water', Food: 'Food', Medicine: 'Medicine', 'Shelter kits': 'Shelter kits' },
+    sampleToast: (urgency, need, area) => `Sample ${urgency.toLowerCase()} request for ${need.toLowerCase()} in ${area} previewed.`,
+  },
+
+  ur: {
+    dir: 'rtl',
+    langButton: 'English',
+    langButtonLabel: 'انگریزی میں تبدیل کریں',
+    pageTitle: 'کاروان — مقصد کے ساتھ امداد، بروقت',
+    brand: 'کاروان',
+    tag: 'ریلیف او ایس',
+    brandLabel: 'کاروان ہوم',
+    nav: { platform: 'پلیٹ فارم', how: 'یہ کیسے کام کرتا ہے', impact: 'ہمارا اثر', demo: 'لائیو ڈیمو' },
+    submit: 'درخواست جمع کرائیں',
+    submitHero: 'درخواست جمع کرائیں ↗',
+    openMenu: 'مینو کھولیں',
+
+    slides: [
+      { title: 'درست مدد۔|*درست جگہ۔*|درست وقت پر۔', desc: 'جب ہر منٹ اہم ہو، کاروان امدادی ٹیموں کو واضح فیصلے کرنے اور ضروری سامان وہاں پہنچانے میں مدد دیتا ہے جہاں اس سے سب سے زیادہ فرق پڑے۔', stat: '12 مقامات', label: 'سیلاب سے متاثرہ سندھ بھر میں منسلک' },
+      { title: 'جب ضروریات بڑھیں،|*وضاحت اہم ہوتی ہے۔*', desc: 'فوری درخواستیں، اسٹاک کی سطح اور ترسیل کی صلاحیت کو ایک مشترکہ آپریشنل تصویر میں لائیں۔', stat: '4 اقسام کا سامان', label: 'خوراک · پانی · ادویات · شیلٹر کٹس' },
+      { title: 'ہر درخواست کی|ایک *وجہ* ہے۔', desc: 'شفاف ترجیحی اسکور کوآرڈینیٹرز کو سمجھاتے ہیں کہ کن ضروریات پر پہلے توجہ دینی ہے—اور کیوں۔', stat: '5 ترجیحی عوامل', label: 'فوری ضرورت سے رسائی تک' },
+      { title: 'ڈپو سے|*دہلیز* تک۔', desc: 'دستیاب ذخیرے کو امدادی درخواستوں سے جوڑیں اور ہر ترسیل کو اس کے طے شدہ راستے پر دیکھیں۔', stat: '3 ڈیمو ڈپو', label: 'حیدرآباد · سکھر · کراچی' },
+      { title: 'ہر وسیلے کو|*کارآمد* بنائیں۔', desc: 'بدلتے حالات کو آزمائیں، تخصیص کے نتائج کا موازنہ کریں اور طلب یا رسد بدلنے پر منصوبے ڈھالیں۔', stat: 'ایک مشن', label: 'درست مدد، درست ترتیب میں' },
+    ],
+    heroSlides: 'ہیرو سلائیڈز',
+    slideN: (n) => `سلائیڈ ${n}`,
+
+    ticker: ['مقصد کے ساتھ سامان', 'ایسے فیصلے جو سمجھائے جا سکیں', 'ہر ترسیل اہم ہے', 'انسانی اثر کے لیے بنایا گیا'],
+
+    platform: {
+      kicker: 'ایک پلیٹ فارم۔ ایک مشترکہ تصویر۔',
+      title: 'بہت سے حصے۔|ایک واضح مشن۔',
+      desc: 'کاروان میدانی درخواستوں، گودام کے ذخیرے اور ترسیلی صلاحیت کو جوڑتا ہے—تاکہ کوآرڈینیٹرز محدود وسائل کو بہتر باخبر فیصلوں میں بدل سکیں۔',
+    },
+    services: [
+      { num: '01 / درخواستیں', title: 'ہر ضرورت، نظر کے سامنے', desc: 'مقام، فوری ضرورت، متاثرہ افراد، رسائی اور ضروری سامان کے لحاظ سے درخواستیں جمع کریں۔' },
+      { num: '02 / ذخیرہ', title: 'جانیں کیا دستیاب ہے', desc: 'اسٹاک کی سطح، دستیاب گاڑیاں اور ڈپو کی روزانہ گنجائش ایک مربوط منظر میں دیکھیں۔' },
+      { num: '03 / ترجیح', title: 'وجہ کے ساتھ ترجیحات', desc: 'شفاف اسکور کی تفصیل کے ساتھ سمجھیں کہ کوئی درخواست اس درجے پر کیوں ہے۔' },
+      { num: '04 / تخصیص', title: 'منصفانہ تخصیص', desc: 'جب طلب ذخیرے سے بڑھ جائے تو سامان کی تقسیم تجویز کریں اور دکھائیں کہ کیا پورا نہیں ہوا۔' },
+      { num: '05 / راستے', title: 'ڈپو سے منزل تک', desc: 'امدادی مقامات تک ترسیل کی پیش رفت، راستے کی معلومات اور متوقع آمد کو دیکھیں۔' },
+      { num: '06 / نقالی', title: 'بدلتے حالات کی منصوبہ بندی', desc: 'نئی ایمرجنسی، کم اسٹاک یا بند راستے کو آزمائیں، پھر تخصیص پر اثر کا موازنہ کریں۔' },
+    ],
+
+    safety: {
+      imageLabel: 'کمیونٹی کی مدد اور انسانی امداد',
+      title: 'ہر فیصلے کی ایک وجہ ہونی چاہیے۔',
+      desc: 'جب وسائل محدود ہوں تو ڈیش بورڈ کو صرف اعداد نہیں دکھانے چاہییں۔ کاروان "کیوں" کو نظر آنے والا بناتا ہے—ترجیحی عوامل سے لے کر جزوی تخصیص تک—تاکہ کوآرڈینیٹرز ہر سفارش کو سمجھ اور سمجھا سکیں۔',
+      button: 'رابطہ کاری کا منظر دیکھیں ↗',
+      metrics: ['ترجیحی عوامل', 'ضروری سامان کی اقسام', 'ڈیمو ڈپو', 'مشترکہ مشن'],
+    },
+
+    dashboard: {
+      kicker: 'قریب سے جائزہ',
+      title: 'صورتحال دیکھیں۔|وضاحت کے ساتھ عمل کریں۔',
+      desc: 'کاروان ہیکاتھون پروٹوٹائپ کے لیے ایک نمونہ رابطہ کاری منظر۔ نیچے دیے گئے مقامات اور اعداد صرف مثال کے طور پر ڈیمو ڈیٹا ہیں—براہِ راست ایمرجنسی معلومات نہیں۔',
+      overview: 'امدادی کارروائیوں کا جائزہ',
+      live: 'ڈیمو نقالی',
+      mapLabel: 'امدادی مقامات دکھانے والا مثالی نقشہ',
+      sukkur: 'سکھر ڈپو', dadu: 'دادو', hyderabad: 'حیدرآباد ڈپو', badin: 'بدین',
+      truck: 'نقلی ٹرک',
+      legend: { critical: 'انتہائی نازک', high: 'زیادہ', transit: 'راستے میں', delivered: 'پہنچا دیا گیا' },
+      note: 'مثالی راستہ · نقلی ٹرک کی حرکت',
+      refresh: 'راستہ ریفریش کریں ↻',
+      refreshToast: 'ڈیمو راستہ ریفریش ہو گیا۔ کوئی حقیقی روانگی نہیں کی گئی۔',
+      kpis: [['فعال درخواستیں', '12'], ['مدد کے منتظر افراد', '8.4 ہزار'], ['جاری ترسیلات', '06'], ['نازک قلت', '04']],
+      queue: 'ترجیحی قطار',
+      demoData: 'ڈیمو ڈیٹا ↗',
+      requests: [
+        { title: 'دادو · درخواست #104', sub: 'پانی · 2,400 افراد متاثر', status: 'نازک' },
+        { title: 'سیہون · درخواست #108', sub: 'ادویات · رسائی مشکل', status: 'زیادہ' },
+        { title: 'بدین · درخواست #112', sub: 'شیلٹر کٹس · انتظار میں', status: 'انتظار' },
+      ],
+    },
+
+    impact: {
+      kicker: 'نظام کے پیچھے مقصد',
+      title: 'ٹیکنالوجی کو چاہیے کہ|انسانیت کو آگے بڑھائے۔',
+      desc: 'ہر درخواست کے پیچھے ایک خاندان، ایک برادری اور ایک ایسی ضرورت ہے جو انتظار نہیں کر سکتی۔ بہتر رابطہ کاری امدادی ٹیموں کو اپنے پاس موجود وسائل زیادہ سوچ سمجھ کر استعمال کرنے میں مدد دیتی ہے۔',
+      storyAlt: 'رضاکار مل کر ایک کمیونٹی کی مدد کر رہے ہیں',
+      storyKicker: 'اعداد کے پیچھے لوگ',
+      storyTitle: 'امداد صرف سامان پہنچانا نہیں ہے۔',
+      storyDesc: 'یہ ضرورت کو سمجھنے، دستیاب بہترین فیصلہ کرنے اور ہر ٹیم کو ان لوگوں پر مرکوز رکھنے کا نام ہے جنہیں مدد چاہیے۔',
+      storyButton: 'اس خیال کو دیکھیں ↗',
+      card1: { kicker: 'شفافیت کے لیے ڈیزائن کیا گیا', title: 'سفارش کی وضاحت کریں۔', desc: 'ترجیحی عوامل، تخصیص کی مقداریں اور غیر پوری ضروریات سمجھ میں آنی چاہییں—کسی اسکور کے پیچھے چھپی نہیں۔', button: 'سمیولیٹر آزمائیں ↗' },
+      card2: { kicker: 'بدلتے حالات کے لیے بنایا گیا', title: 'جب صورتحال بدلے تو منصوبے بھی بدلیں۔', desc: 'نئی ایمرجنسی یا اسٹاک کی کمی آزمائیں اور موازنہ کریں کہ دوبارہ تخصیص سے تکمیل کیسے بدل سکتی ہے۔', button: '"کیا ہو اگر" منصوبہ بندی دیکھیں ↗' },
+      news: [
+        { alt: 'تقسیم کے لیے تیار امدادی سامان', tag: '01 · تیاری', title: 'محدود سامان کو کارآمد بنائیں۔', desc: 'ذخیرے کی نمائی ٹیموں کو سمجھنے میں مدد دیتی ہے کہ کیا بھیجا جا سکتا ہے اور کمی کہاں باقی ہے۔' },
+        { alt: 'انسانی امداد حاصل کرتی ہوئی کمیونٹی', tag: '02 · رابطہ کاری', title: 'فوری ضروریات کو نظر میں رکھیں۔', desc: 'مشترکہ درخواستی قطار کوآرڈینیٹرز کو فوری ضرورت، کمزوری اور انتظار کا وقت ایک ساتھ دیکھنے میں مدد دیتی ہے۔' },
+        { alt: 'امداد سے مستفید کمیونٹی کے بچے', tag: '03 · انسانی اثر', title: 'لوگوں کو مرکز میں رکھیں۔', desc: 'ہر نشان کے پیچھے ایک حقیقی ضرورت ہے۔ انٹرفیس کو یہ بھولنا ناممکن بنانا چاہیے۔' },
+      ],
+    },
+
+    sim: {
+      eyebrow: 'انٹرایکٹو تصوراتی ڈیمو',
+      title: 'اگر صورتحال بدل جائے تو؟',
+      desc: 'ڈیمو حالات کو تبدیل کر کے دیکھیں کہ نمونہ تکمیلی تخمینہ کیسے بدلتا ہے۔ یہ کاروان کے "کیا ہو اگر" تصور کی فرنٹ اینڈ مثال ہے، اصل تخصیصی الگورتھم نہیں۔',
+      baseline: 'مثالی بنیادی سطح',
+      fcfs: 'پہلے آئیے پہلے پائیے: 61%',
+      karwan: 'کاروان: 84%',
+      panel: '"کیا ہو اگر" سمیولیٹر',
+      interactive: 'انٹرایکٹو',
+      demand: 'طلب میں اضافہ',
+      stock: 'دستیاب اسٹاک',
+      capacity: 'ترسیلی صلاحیت',
+      fulfilment: 'تخمینی تکمیل',
+      gap: 'تخمینی رسد کا خلا',
+      msgOk: 'اس ڈیمو منظرنامے میں اسٹاک اور صلاحیت متوازن ہیں۔',
+      msgMid: 'رسد میں کمی ابھر رہی ہے۔ ڈپو کا اسٹاک یا ترسیلی صلاحیت دیکھیں۔',
+      msgLow: 'اس منظرنامے میں بڑی قلت پیدا ہوتی ہے۔ نازک اور کمزور درخواستوں کو ترجیح دیں۔',
+      reset: 'منظرنامہ ری سیٹ کریں ↻',
+      resetToast: 'ڈیمو منظرنامہ ری سیٹ ہو گیا۔',
+    },
+
+    flow: {
+      kicker: 'حقیقی کام کے بہاؤ کے مطابق',
+      title: 'درخواست سے ترسیل تک۔',
+      desc: 'میدانی رپورٹرز، ڈپو مینیجرز، کوآرڈینیٹرز اور ڈرائیورز کے لیے ایک مربوط بہاؤ—MVP میں سادہ رول سوئچ کے ساتھ۔',
+      steps: [
+        { num: 'مرحلہ 01', title: 'ضرورت رپورٹ کریں', desc: 'متاثرہ علاقہ، فوری ضرورت کی سطح، کمزور طبقات اور مطلوبہ سامان جمع کرائیں۔' },
+        { num: 'مرحلہ 02', title: 'منصفانہ ترجیح دیں', desc: 'اسکور دیکھیں: فوری ضرورت 35%، متاثرہ افراد 25%، کمزوری 15%، انتظار 15%، رسائی 10%۔' },
+        { num: 'مرحلہ 03', title: 'تخصیص کریں اور ٹریک کریں', desc: 'تجویز کردہ مقداریں دیکھیں، روانگی منظور کریں اور ترسیل تک نقلی سفر کو ٹریک کریں۔' },
+      ],
+    },
+
+    footer: {
+      tagline: 'درست سامان، درست لوگوں تک، درست ترتیب میں—اور اس کی واضح وجہ کے ساتھ۔',
+      badge: 'CL-03 · آفات میں امدادی وسائل کا آپٹیمائزر',
+      explore: 'دریافت کریں', platform: 'پلیٹ فارم', ops: 'آپریشنز منظر', sim: '"کیا ہو اگر" سمیولیٹر',
+      workflows: 'ورک فلو', reqPriority: 'درخواستیں اور ترجیح', invRoutes: 'ذخیرہ اور راستے', human: 'انسانی اثر',
+      prototype: 'پروٹوٹائپ', top: 'اوپر واپس جائیں ↑', about: 'اس ڈیمو کے بارے میں', sample: 'نمونہ درخواست جمع کرائیں',
+      aboutToast: 'یہ مثالی ڈیٹا استعمال کرنے والا فرنٹ اینڈ پروٹوٹائپ ہے۔',
+      copyright: '© 2026 کاروان · ہیکاتھون MVP پروٹوٹائپ',
+      disclaimer: 'صرف مثالی ڈیٹا · ایمرجنسی رسپانس سروس نہیں',
+    },
+
+    modal: {
+      kicker: 'درخواست گزار پورٹل · پروٹوٹائپ',
+      title: 'ہمیں بتائیں کیا چاہیے۔',
+      desc: 'ایک مثالی درخواست جمع کر کے درخواست گزار کے بہاؤ کا پیش منظر دیکھیں۔ یہ پروٹوٹائپ کوئی معلومات سرور یا ایمرجنسی سروس کو نہیں بھیجتا۔',
+      area: 'متاثرہ علاقہ',
+      areaPlaceholder: 'مثلاً دادو',
+      urgency: 'فوری ضرورت',
+      need: 'سب سے ضروری سامان',
+      submit: 'درخواست کا پیش منظر ↗',
+      close: 'ڈائیلاگ بند کریں',
+    },
+    urgencyOptions: { Critical: 'انتہائی نازک', High: 'زیادہ', Medium: 'درمیانہ', Low: 'کم' },
+    needOptions: { Water: 'پانی', Food: 'خوراک', Medicine: 'ادویات', 'Shelter kits': 'شیلٹر کٹس' },
+    sampleToast: (urgency, need, area) => `${area} میں ${need} کے لیے ${urgency} نمونہ درخواست کا پیش منظر تیار۔`,
+  },
+};

@@ -1,0 +1,59 @@
+{
+  "activeRequests": 12,
+  "peopleAwaiting": 29400,
+  "deliveriesInProgress": 0,
+  "completedDeliveries": 0,
+  "criticalShortages": [
+    {
+      "item": "water",
+      "needed": 3950,
+      "available": 3100,
+      "gap": 850
+    },
+    {
+      "item": "food",
+      "needed": 3070,
+      "available": 2700,
+      "gap": 370
+    },
+    {
+      "item": "medicine",
+      "needed": 500,
+      "available": 300,
+      "gap": 200
+    },
+    {
+      "item": "shelter",
+      "needed": 990,
+      "available": 730,
+      "gap": 260
+    }
+  ],
+  "inventoryTotals": [
+    {
+      "item": "water",
+      "qty": 3100
+    },
+    {
+      "item": "food",
+      "qty": 2700
+    },
+    {
+      "item": "medicine",
+      "qty": 300
+    },
+    {
+      "item": "shelter",
+      "qty": 730
+    }
+  ],
+  "lowStockAlerts": [
+    {
+      "depotId": "dep_02",
+      "depotName": "Sukkur Depot",
+      "item": "medicine",
+      "qty": 80,
+      "lowThreshold": 90
+    }
+  ]
+}

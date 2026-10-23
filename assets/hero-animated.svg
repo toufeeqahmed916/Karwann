@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 420" width="1280" height="420" role="img" aria-label="Karwan, Disaster Relief Resource Optimizer. Right help, right place, right now.">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#101319"/>
+      <stop offset="1" stop-color="#1c2230"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#C4F135" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#C4F135" stop-opacity="0"/>
+    </radialGradient>
+    <path id="route" d="M 860 350 C 920 350, 950 280, 1010 255 S 1110 160, 1190 125"/>
+  </defs>
+
+  <rect width="1280" height="420" fill="url(#bg)"/>
+
+  <!-- soft moving glow -->
+  <circle cx="1020" cy="230" r="220" fill="url(#glow)">
+    <animate attributeName="cx" values="980;1080;980" dur="9s" repeatCount="indefinite"/>
+    <animate attributeName="r" values="200;250;200" dur="9s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- grid -->
+  <g stroke="#ffffff" stroke-opacity="0.05">
+    <path d="M0 60H1280M0 120H1280M0 180H1280M0 240H1280M0 300H1280M0 360H1280"/>
+    <path d="M80 0V420M160 0V420M240 0V420M320 0V420M400 0V420M480 0V420M560 0V420M640 0V420M720 0V420M800 0V420M880 0V420M960 0V420M1040 0V420M1120 0V420M1200 0V420"/>
+  </g>
+
+  <!-- animated route -->
+  <use href="#route" fill="none" stroke="#C4F135" stroke-width="3" stroke-dasharray="10 12" stroke-linecap="round" opacity="0.9">
+    <animate attributeName="stroke-dashoffset" from="0" to="-88" dur="2.2s" repeatCount="indefinite"/>
+  </use>
+
+  <!-- depot -->
+  <g transform="translate(860 350)">
+    <rect x="-16" y="-16" width="32" height="32" rx="6" fill="#C4F135"/>
+    <path d="M-8 4V-4L0 -10L8 -4V4Z" fill="#101319"/>
+    <text x="0" y="38" fill="#ffffff" fill-opacity="0.7" font-family="system-ui,Segoe UI,Arial" font-size="13" text-anchor="middle">Depot</text>
+  </g>
+
+  <!-- request pins, pulsing -->
+  <g font-family="system-ui,Segoe UI,Arial" font-size="13" fill="#ffffff" fill-opacity="0.75" text-anchor="middle">
+    <g transform="translate(1010 255)">
+      <circle r="10" fill="#EF8A1F"/>
+      <circle r="10" fill="none" stroke="#EF8A1F" stroke-width="2"><animate attributeName="r" values="10;30;10" dur="2.4s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.9;0;0.9" dur="2.4s" repeatCount="indefinite"/></circle>
+      <text y="-20">Badin</text>
+    </g>
+    <g transform="translate(1190 125)">
+      <circle r="11" fill="#D93636"/>
+      <circle r="11" fill="none" stroke="#D93636" stroke-width="2"><animate attributeName="r" values="11;34;11" dur="2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.9;0;0.9" dur="2s" repeatCount="indefinite"/></circle>
+      <text y="-22">Jacobabad</text>
+    </g>
+    <g transform="translate(1110 345)">
+      <circle r="9" fill="#E3C21B"/>
+      <circle r="9" fill="none" stroke="#E3C21B" stroke-width="2"><animate attributeName="r" values="9;26;9" dur="2.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.9;0;0.9" dur="2.8s" repeatCount="indefinite"/></circle>
+      <text y="26">Sanghar</text>
+    </g>
+  </g>
+
+  <!-- truck moving along the route -->
+  <g>
+    <g transform="translate(-18 -12)">
+      <rect width="26" height="16" rx="3" fill="#ffffff"/>
+      <rect x="26" y="5" width="10" height="11" rx="2" fill="#C4F135"/>
+      <circle cx="9" cy="18" r="4" fill="#101319" stroke="#ffffff" stroke-width="2"/>
+      <circle cx="29" cy="18" r="4" fill="#101319" stroke="#ffffff" stroke-width="2"/>
+    </g>
+    <animateMotion dur="7s" repeatCount="indefinite" rotate="0"><mpath href="#route"/></animateMotion>
+  </g>
+
+  <!-- title -->
+  <g font-family="system-ui,Segoe UI,Arial,sans-serif">
+    <text x="80" y="170" fill="#ffffff" font-size="96" font-weight="800" letter-spacing="-3">Karwan
+      <animate attributeName="opacity" values="0;1" dur="1s" fill="freeze"/>
+    </text>
+    <text x="84" y="214" fill="#C4F135" font-size="22" font-weight="700" letter-spacing="1">DISASTER RELIEF RESOURCE OPTIMIZER</text>
+
+    <!-- rotating tagline -->
+    <g font-size="34" font-weight="700" fill="#ffffff">
+      <text x="84" y="282">Right help.<animate attributeName="opacity" values="0;1;1;1" keyTimes="0;0.15;0.9;1" dur="6s" repeatCount="indefinite"/></text>
+      <text x="84" y="282" fill-opacity="0">
+        <tspan x="84" dx="190">Right place.</tspan>
+        <animate attributeName="fill-opacity" values="0;0;1;1" keyTimes="0;0.3;0.45;1" dur="6s" repeatCount="indefinite"/>
+      </text>
+      <text x="84" y="282" fill="#C4F135" fill-opacity="0">
+        <tspan x="84" dx="415">Right now.</tspan>
+        <animate attributeName="fill-opacity" values="0;0;1;1" keyTimes="0;0.6;0.75;1" dur="6s" repeatCount="indefinite"/>
+      </text>
+    </g>
+    <text x="84" y="334" fill="#ffffff" fill-opacity="0.65" font-size="17">Transparent priority scores · Fair allocation · Live tracking · AI that understands Urdu and English</text>
+    <text x="84" y="372" fill="#ffffff" fill-opacity="0.45" font-size="14">DITE Hackathon 2026-27 · Team Triple Bytes · Category 4: Climate &amp; Disaster Resilience</text>
+  </g>
+</svg>

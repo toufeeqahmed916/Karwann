@@ -1,0 +1,155 @@
+[
+  {
+    "id": "dep_01",
+    "name": "Hyderabad Depot",
+    "lat": 25.396,
+    "lng": 68.3578,
+    "dailyCapacity": 2000,
+    "stock": [
+      {
+        "item": "water",
+        "qty": 1200,
+        "lowThreshold": 300,
+        "isLow": false
+      },
+      {
+        "item": "food",
+        "qty": 900,
+        "lowThreshold": 250,
+        "isLow": false
+      },
+      {
+        "item": "medicine",
+        "qty": 100,
+        "lowThreshold": 40,
+        "isLow": false
+      },
+      {
+        "item": "shelter",
+        "qty": 250,
+        "lowThreshold": 60,
+        "isLow": false
+      }
+    ],
+    "vehicles": [
+      {
+        "id": "veh_01",
+        "name": "Truck 1",
+        "capacity": 400,
+        "status": "available",
+        "lat": 25.396,
+        "lng": 68.3578
+      },
+      {
+        "id": "veh_02",
+        "name": "Truck 2",
+        "capacity": 300,
+        "status": "available",
+        "lat": 25.396,
+        "lng": 68.3578
+      }
+    ]
+  },
+  {
+    "id": "dep_02",
+    "name": "Sukkur Depot",
+    "lat": 27.7052,
+    "lng": 68.8574,
+    "dailyCapacity": 1600,
+    "stock": [
+      {
+        "item": "water",
+        "qty": 900,
+        "lowThreshold": 300,
+        "isLow": false
+      },
+      {
+        "item": "food",
+        "qty": 700,
+        "lowThreshold": 250,
+        "isLow": false
+      },
+      {
+        "item": "medicine",
+        "qty": 80,
+        "lowThreshold": 90,
+        "isLow": true
+      },
+      {
+        "item": "shelter",
+        "qty": 180,
+        "lowThreshold": 60,
+        "isLow": false
+      }
+    ],
+    "vehicles": [
+      {
+        "id": "veh_03",
+        "name": "Truck 3",
+        "capacity": 350,
+        "status": "available",
+        "lat": 27.7052,
+        "lng": 68.8574
+      },
+      {
+        "id": "veh_04",
+        "name": "Truck 4",
+        "capacity": 250,
+        "status": "available",
+        "lat": 27.7052,
+        "lng": 68.8574
+      }
+    ]
+  },
+  {
+    "id": "dep_03",
+    "name": "Karachi Depot",
+    "lat": 24.8607,
+    "lng": 67.0011,
+    "dailyCapacity": 2200,
+    "stock": [
+      {
+        "item": "water",
+        "qty": 1000,
+        "lowThreshold": 300,
+        "isLow": false
+      },
+      {
+        "item": "food",
+        "qty": 1100,
+        "lowThreshold": 250,
+        "isLow": false
+      },
+      {
+        "item": "medicine",
+        "qty": 120,
+        "lowThreshold": 40,
+        "isLow": false
+      },
+      {
+        "item": "shelter",
+        "qty": 300,
+        "lowThreshold": 60,
+        "isLow": false
+      }
+    ],
+    "vehicles": [
+      {
+        "id": "veh_05",
+        "name": "Truck 5",
+        "capacity": 500,
+        "status": "available",
+        "lat": 24.8607,
+        "lng": 67.0011
+      },
+      {
+        "id": "veh_06",
+        "name": "Truck 6",
+        "capacity": 400,
+        "status": "available",
+        "lat": 24.8607,
+        "lng": 67.0011
+      }
+    ]
+  }
+]

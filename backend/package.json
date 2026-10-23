@@ -1,0 +1,37 @@
+{
+  "name": "karwan-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Node.js and Express backend for the Karwan disaster relief resource optimizer.",
+  "type": "module",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "check:allocation": "node scripts/check-allocation-api.js",
+    "check:ai-contract": "node scripts/check-ai-contract.js",
+    "check:db": "node scripts/check-database.js",
+    "check:e2e": "node scripts/check-e2e.js",
+    "check:dashboard": "node scripts/check-dashboard-api.js",
+    "check:inventory": "node scripts/check-inventory-api.js",
+    "check:requests": "node scripts/check-requests-api.js",
+    "check:routes-deliveries": "node scripts/check-routes-deliveries-api.js",
+    "warm:routes": "node scripts/warm-route-cache.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@supabase/server": "^1.9.2",
+    "@supabase/supabase-js": "^2.117.3",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.7",
+    "express": "^5.3.0"
+  },
+  "devDependencies": {
+    "supertest": "^7.3.1",
+    "vitest": "^5.0.4"
+  }
+}

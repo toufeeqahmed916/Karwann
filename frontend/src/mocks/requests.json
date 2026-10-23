@@ -1,0 +1,519 @@
+[
+  {
+    "id": "req_03",
+    "area": "Jacobabad",
+    "lat": 28.2769,
+    "lng": 68.4514,
+    "population": 5200,
+    "urgency": "critical",
+    "vulnerable": true,
+    "accessibility": "hard",
+    "status": "pending",
+    "hoursWaiting": 30,
+    "createdAt": "2026-10-12T06:03:27.615Z",
+    "items": [
+      {
+        "item": "water",
+        "qtyNeeded": 600,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "food",
+        "qtyNeeded": 600,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "medicine",
+        "qtyNeeded": 120,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "shelter",
+        "qtyNeeded": 150,
+        "qtyAllocated": 0
+      }
+    ],
+    "fulfilmentPct": 0,
+    "score": {
+      "total": 98,
+      "parts": {
+        "urgency": 35,
+        "population": 25,
+        "vulnerability": 15,
+        "waiting": 13,
+        "accessibility": 10
+      }
+    }
+  },
+  {
+    "id": "req_01",
+    "area": "Dadu",
+    "lat": 26.7319,
+    "lng": 67.775,
+    "population": 4200,
+    "urgency": "critical",
+    "vulnerable": true,
+    "accessibility": "hard",
+    "status": "pending",
+    "hoursWaiting": 18,
+    "createdAt": "2026-10-12T18:03:27.615Z",
+    "items": [
+      {
+        "item": "water",
+        "qtyNeeded": 500,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "food",
+        "qtyNeeded": 400,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "medicine",
+        "qtyNeeded": 100,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "shelter",
+        "qtyNeeded": 100,
+        "qtyAllocated": 0
+      }
+    ],
+    "fulfilmentPct": 0,
+    "score": {
+      "total": 88,
+      "parts": {
+        "urgency": 35,
+        "population": 20,
+        "vulnerability": 15,
+        "waiting": 8,
+        "accessibility": 10
+      }
+    }
+  },
+  {
+    "id": "req_07",
+    "area": "Sehwan",
+    "lat": 26.4167,
+    "lng": 67.8667,
+    "population": 2200,
+    "urgency": "critical",
+    "vulnerable": true,
+    "accessibility": "hard",
+    "status": "pending",
+    "hoursWaiting": 22,
+    "createdAt": "2026-10-12T14:03:27.615Z",
+    "items": [
+      {
+        "item": "water",
+        "qtyNeeded": 350,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "food",
+        "qtyNeeded": 250,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "medicine",
+        "qtyNeeded": 70,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "shelter",
+        "qtyNeeded": 90,
+        "qtyAllocated": 0
+      }
+    ],
+    "fulfilmentPct": 0,
+    "score": {
+      "total": 80,
+      "parts": {
+        "urgency": 35,
+        "population": 11,
+        "vulnerability": 15,
+        "waiting": 9,
+        "accessibility": 10
+      }
+    }
+  },
+  {
+    "id": "req_02",
+    "area": "Larkana",
+    "lat": 27.559,
+    "lng": 68.212,
+    "population": 3500,
+    "urgency": "high",
+    "vulnerable": true,
+    "accessibility": "medium",
+    "status": "pending",
+    "hoursWaiting": 10,
+    "createdAt": "2026-10-13T02:03:27.615Z",
+    "items": [
+      {
+        "item": "water",
+        "qtyNeeded": 450,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "food",
+        "qtyNeeded": 350,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "medicine",
+        "qtyNeeded": 60,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "shelter",
+        "qtyNeeded": 120,
+        "qtyAllocated": 0
+      }
+    ],
+    "fulfilmentPct": 0,
+    "score": {
+      "total": 67,
+      "parts": {
+        "urgency": 26,
+        "population": 17,
+        "vulnerability": 15,
+        "waiting": 4,
+        "accessibility": 5
+      }
+    }
+  },
+  {
+    "id": "req_05",
+    "area": "Badin",
+    "lat": 24.656,
+    "lng": 68.837,
+    "population": 2800,
+    "urgency": "high",
+    "vulnerable": false,
+    "accessibility": "hard",
+    "status": "pending",
+    "hoursWaiting": 14,
+    "createdAt": "2026-10-12T22:03:27.615Z",
+    "items": [
+      {
+        "item": "water",
+        "qtyNeeded": 350,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "food",
+        "qtyNeeded": 250,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "shelter",
+        "qtyNeeded": 150,
+        "qtyAllocated": 0
+      }
+    ],
+    "fulfilmentPct": 0,
+    "score": {
+      "total": 56,
+      "parts": {
+        "urgency": 26,
+        "population": 13,
+        "vulnerability": 0,
+        "waiting": 6,
+        "accessibility": 10
+      }
+    }
+  },
+  {
+    "id": "req_09",
+    "area": "Nawabshah",
+    "lat": 26.2483,
+    "lng": 68.41,
+    "population": 2600,
+    "urgency": "medium",
+    "vulnerable": true,
+    "accessibility": "medium",
+    "status": "pending",
+    "hoursWaiting": 12,
+    "createdAt": "2026-10-13T00:03:27.615Z",
+    "items": [
+      {
+        "item": "water",
+        "qtyNeeded": 300,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "food",
+        "qtyNeeded": 250,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "medicine",
+        "qtyNeeded": 50,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "shelter",
+        "qtyNeeded": 100,
+        "qtyAllocated": 0
+      }
+    ],
+    "fulfilmentPct": 0,
+    "score": {
+      "total": 55,
+      "parts": {
+        "urgency": 18,
+        "population": 13,
+        "vulnerability": 15,
+        "waiting": 5,
+        "accessibility": 5
+      }
+    }
+  },
+  {
+    "id": "req_12",
+    "area": "Sanghar",
+    "lat": 26.0462,
+    "lng": 68.948,
+    "population": 2000,
+    "urgency": "high",
+    "vulnerable": false,
+    "accessibility": "medium",
+    "status": "pending",
+    "hoursWaiting": 9,
+    "createdAt": "2026-10-13T03:03:27.615Z",
+    "items": [
+      {
+        "item": "water",
+        "qtyNeeded": 280,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "food",
+        "qtyNeeded": 220,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "medicine",
+        "qtyNeeded": 40,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "shelter",
+        "qtyNeeded": 100,
+        "qtyAllocated": 0
+      }
+    ],
+    "fulfilmentPct": 0,
+    "score": {
+      "total": 45,
+      "parts": {
+        "urgency": 26,
+        "population": 10,
+        "vulnerability": 0,
+        "waiting": 4,
+        "accessibility": 5
+      }
+    }
+  },
+  {
+    "id": "req_04",
+    "area": "Thatta",
+    "lat": 24.7475,
+    "lng": 67.9239,
+    "population": 1500,
+    "urgency": "high",
+    "vulnerable": false,
+    "accessibility": "medium",
+    "status": "pending",
+    "hoursWaiting": 4,
+    "createdAt": "2026-10-13T08:03:27.615Z",
+    "items": [
+      {
+        "item": "water",
+        "qtyNeeded": 400,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "food",
+        "qtyNeeded": 150,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "medicine",
+        "qtyNeeded": 60,
+        "qtyAllocated": 0
+      }
+    ],
+    "fulfilmentPct": 0,
+    "score": {
+      "total": 40,
+      "parts": {
+        "urgency": 26,
+        "population": 7,
+        "vulnerability": 0,
+        "waiting": 2,
+        "accessibility": 5
+      }
+    }
+  },
+  {
+    "id": "req_06",
+    "area": "Mirpurkhas",
+    "lat": 25.5276,
+    "lng": 69.0159,
+    "population": 1800,
+    "urgency": "medium",
+    "vulnerable": false,
+    "accessibility": "easy",
+    "status": "pending",
+    "hoursWaiting": 6,
+    "createdAt": "2026-10-13T06:03:27.615Z",
+    "items": [
+      {
+        "item": "water",
+        "qtyNeeded": 250,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "food",
+        "qtyNeeded": 200,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "shelter",
+        "qtyNeeded": 60,
+        "qtyAllocated": 0
+      }
+    ],
+    "fulfilmentPct": 0,
+    "score": {
+      "total": 29,
+      "parts": {
+        "urgency": 18,
+        "population": 9,
+        "vulnerability": 0,
+        "waiting": 2,
+        "accessibility": 0
+      }
+    }
+  },
+  {
+    "id": "req_10",
+    "area": "Khairpur",
+    "lat": 27.5295,
+    "lng": 68.7592,
+    "population": 1600,
+    "urgency": "medium",
+    "vulnerable": false,
+    "accessibility": "easy",
+    "status": "pending",
+    "hoursWaiting": 8,
+    "createdAt": "2026-10-13T04:03:27.615Z",
+    "items": [
+      {
+        "item": "water",
+        "qtyNeeded": 200,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "food",
+        "qtyNeeded": 180,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "shelter",
+        "qtyNeeded": 80,
+        "qtyAllocated": 0
+      }
+    ],
+    "fulfilmentPct": 0,
+    "score": {
+      "total": 29,
+      "parts": {
+        "urgency": 18,
+        "population": 8,
+        "vulnerability": 0,
+        "waiting": 3,
+        "accessibility": 0
+      }
+    }
+  },
+  {
+    "id": "req_11",
+    "area": "Tando Allahyar",
+    "lat": 25.46,
+    "lng": 68.7167,
+    "population": 1100,
+    "urgency": "low",
+    "vulnerable": false,
+    "accessibility": "easy",
+    "status": "pending",
+    "hoursWaiting": 3,
+    "createdAt": "2026-10-13T09:03:27.615Z",
+    "items": [
+      {
+        "item": "water",
+        "qtyNeeded": 150,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "food",
+        "qtyNeeded": 120,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "shelter",
+        "qtyNeeded": 40,
+        "qtyAllocated": 0
+      }
+    ],
+    "fulfilmentPct": 0,
+    "score": {
+      "total": 15,
+      "parts": {
+        "urgency": 9,
+        "population": 5,
+        "vulnerability": 0,
+        "waiting": 1,
+        "accessibility": 0
+      }
+    }
+  },
+  {
+    "id": "req_08",
+    "area": "Matiari",
+    "lat": 25.5971,
+    "lng": 68.4467,
+    "population": 900,
+    "urgency": "low",
+    "vulnerable": false,
+    "accessibility": "easy",
+    "status": "pending",
+    "hoursWaiting": 2,
+    "createdAt": "2026-10-13T10:03:27.615Z",
+    "items": [
+      {
+        "item": "water",
+        "qtyNeeded": 120,
+        "qtyAllocated": 0
+      },
+      {
+        "item": "food",
+        "qtyNeeded": 100,
+        "qtyAllocated": 0
+      }
+    ],
+    "fulfilmentPct": 0,
+    "score": {
+      "total": 14,
+      "parts": {
+        "urgency": 9,
+        "population": 4,
+        "vulnerability": 0,
+        "waiting": 1,
+        "accessibility": 0
+      }
+    }
+  }
+]

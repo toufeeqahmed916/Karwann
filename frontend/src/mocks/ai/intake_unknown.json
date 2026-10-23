@@ -1,0 +1,12 @@
+{
+  "area": null,
+  "people": null,
+  "peopleIsEstimate": false,
+  "urgency": null,
+  "vulnerable": [],
+  "supplies": [],
+  "access": null,
+  "detectedLanguage": "en",
+  "englishText": "Please help us, it is very bad here.",
+  "confidence": { "area": 0, "people": 0, "urgency": 0, "vulnerable": 0, "supplies": 0, "access": 0 }
+}
