@@ -56,8 +56,12 @@ export default function DriverPage() {
   } : null;
 
   async function refresh() {
-    setDeliveries(await getDeliveries());
-    setOverview(await getCoordinatorOverview());
+    const [nextDeliveries, nextOverview] = await Promise.all([
+      getDeliveries(),
+      getCoordinatorOverview(),
+    ]);
+    setDeliveries(nextDeliveries);
+    setOverview(nextOverview);
   }
 
   async function startTrip() {

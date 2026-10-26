@@ -45,27 +45,26 @@ describe("route service", () => {
   });
 
   it("converts OSRM GeoJSON coordinates and caches the route", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue({
-        ok: true,
-        json: async () => ({
-          code: "Ok",
-          routes: [
-            {
-              distance: 142500,
-              duration: 11400,
-              geometry: { coordinates: [[68.3578, 25.396], [67.775, 26.7319]] },
-            },
-          ],
-        }),
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        code: "Ok",
+        routes: [
+          {
+            distance: 142500,
+            duration: 11400,
+            geometry: { coordinates: [[68.3578, 25.396], [67.775, 26.7319]] },
+          },
+        ],
       }),
-    );
+    });
+    vi.stubGlobal("fetch", fetchMock);
 
     const result = await getRoute({ depotId: "dep_01", requestId: "req_01" });
 
     expect(result).toMatchObject({ distanceKm: 142.5, durationMin: 190, estimated: false });
     expect(result.polyline[0]).toEqual([25.396, 68.3578]);
+    expect(fetchMock.mock.calls[0][0]).toContain("overview=simplified");
     expect(saveCachedRoute).toHaveBeenCalledWith(result);
   });
 

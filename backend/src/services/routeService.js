@@ -8,7 +8,9 @@ import {
 import { validateRouteQuery } from "../validators/routeValidator.js";
 
 const OSRM_BASE_URL = "https://router.project-osrm.org";
-const ROUTE_TIMEOUT_MS = 5000;
+// The public OSRM service normally answers well below this. Prefer the instant
+// estimated-route fallback over making an emergency workflow wait five seconds.
+const ROUTE_TIMEOUT_MS = 2500;
 
 function mapCachedRoute(row) {
   return {
@@ -44,7 +46,9 @@ export function estimatedRoute(depot, request) {
 
 export async function fetchOsrmRoute(depot, request) {
   const coordinates = `${depot.lng},${depot.lat};${request.lng},${request.lat}`;
-  const url = `${OSRM_BASE_URL}/route/v1/driving/${coordinates}?overview=full&geometries=geojson`;
+  // Simplified geometry keeps the road shape while dramatically reducing JSON,
+  // database cache size, React work, and Leaflet drawing cost.
+  const url = `${OSRM_BASE_URL}/route/v1/driving/${coordinates}?overview=simplified&geometries=geojson`;
   const response = await fetch(url, {
     headers: { "User-Agent": "Karwan-Relief-Optimizer/0.1" },
     signal: AbortSignal.timeout(ROUTE_TIMEOUT_MS),

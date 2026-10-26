@@ -14,12 +14,27 @@ export function subscribeToDeliveryUpdates({ vehicleId, onData, onConnectionChan
   let stopped = false;
   let realtimeReady = false;
   let refreshing = false;
+  let hasActiveDelivery = false;
+  let fallbackTimer = null;
+  let lastRefreshAt = 0;
+
+  function nextDelay() {
+    if (document.hidden) return 30000;
+    return hasActiveDelivery ? 2000 : 12000;
+  }
+
+  function schedule() {
+    window.clearTimeout(fallbackTimer);
+    if (!stopped) fallbackTimer = window.setTimeout(() => refresh(), nextDelay());
+  }
 
   async function refresh(mode = realtimeReady ? "realtime" : "polling") {
     if (refreshing) return;
     refreshing = true;
+    lastRefreshAt = Date.now();
     try {
       const deliveries = await getDeliveries(vehicleId);
+      hasActiveDelivery = deliveries.some((delivery) => delivery.status === "in_transit");
       if (!stopped) {
         onData(deliveries);
         onConnectionChange?.({ paused: false, mode });
@@ -28,20 +43,33 @@ export function subscribeToDeliveryUpdates({ vehicleId, onData, onConnectionChan
       if (!stopped) onConnectionChange?.({ paused: true, mode: "polling", error });
     } finally {
       refreshing = false;
+      schedule();
     }
   }
 
   refresh("polling");
-  const fallbackTimer = window.setInterval(() => {
-    // Keep polling even while Realtime is connected. Delivery progress is
-    // calculated by the server from elapsed time, so polling also advances it.
-    refresh(realtimeReady ? "realtime" : "polling");
-  }, 2000);
+
+  function refreshNow(mode) {
+    window.clearTimeout(fallbackTimer);
+    // A delivery GET persists elapsed progress, which itself emits a Supabase
+    // allocation event. Ignore that immediate echo to avoid a request loop.
+    if (mode === "realtime" && Date.now() - lastRefreshAt < 1000) {
+      schedule();
+      return;
+    }
+    refresh(mode);
+  }
+
+  function onVisibilityChange() {
+    if (document.hidden) schedule();
+    else refreshNow(realtimeReady ? "realtime" : "polling");
+  }
+  document.addEventListener("visibilitychange", onVisibilityChange);
 
   const channel = realtimeClient
     ?.channel(`delivery-updates-${Math.random().toString(36).slice(2)}`)
-    .on("postgres_changes", { event: "*", schema: "public", table: "vehicles" }, () => refresh("realtime"))
-    .on("postgres_changes", { event: "*", schema: "public", table: "allocations" }, () => refresh("realtime"))
+    .on("postgres_changes", { event: "*", schema: "public", table: "vehicles" }, () => refreshNow("realtime"))
+    .on("postgres_changes", { event: "*", schema: "public", table: "allocations" }, () => refreshNow("realtime"))
     .subscribe((status) => {
       if (stopped) return;
       if (status === "SUBSCRIBED") {
@@ -55,7 +83,8 @@ export function subscribeToDeliveryUpdates({ vehicleId, onData, onConnectionChan
 
   return () => {
     stopped = true;
-    window.clearInterval(fallbackTimer);
+    window.clearTimeout(fallbackTimer);
+    document.removeEventListener("visibilitychange", onVisibilityChange);
     if (channel && realtimeClient) realtimeClient.removeChannel(channel);
   };
 }

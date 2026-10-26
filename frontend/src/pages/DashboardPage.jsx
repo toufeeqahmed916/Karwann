@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import KpiCard from "../components/KpiCard.jsx";
 import HeatLayer from "../components/HeatLayer.jsx";
 import LayerSwitch from "../components/LayerSwitch.jsx";
@@ -27,6 +27,7 @@ export default function DashboardPage() {
   const [route, setRoute] = useState(null);
   const [deliveries, setDeliveries] = useState([]);
   const [connection, setConnection] = useState({ paused: false, mode: "polling" });
+  const deliveryState = useRef("");
 
   async function load() {
     const data = await getCoordinatorOverview();
@@ -41,7 +42,13 @@ export default function DashboardPage() {
   useEffect(() => subscribeToDeliveryUpdates({
     onData(data) {
       setDeliveries(data);
-      getCoordinatorOverview().then(setOverview).catch(() => {});
+      const nextState = data.map((delivery) => `${delivery.allocationId}:${delivery.status}`).sort().join("|");
+      // Progress changes update from the delivery response itself. Reload the
+      // heavier overview only when a delivery is added or changes status.
+      if (deliveryState.current && deliveryState.current !== nextState) {
+        getCoordinatorOverview().then(setOverview).catch(() => {});
+      }
+      deliveryState.current = nextState;
     },
     onConnectionChange: setConnection,
   }), []);

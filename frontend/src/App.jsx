@@ -21,17 +21,39 @@ import { aiHealth } from "./lib/aiApi.js";
 import { useLanguage } from "./lib/i18n.jsx";
 import BrandLogo from "./components/BrandLogo.jsx";
 
-const AllocationPage = lazy(() => import("./pages/AllocationPage.jsx"));
-const AssistantPage = lazy(() => import("./pages/AssistantPage.jsx"));
-const DashboardPage = lazy(() => import("./pages/DashboardPage.jsx"));
-const DriverPage = lazy(() => import("./pages/DriverPage.jsx"));
-const InventoryPage = lazy(() => import("./pages/InventoryPage.jsx"));
+const loadAllocation = () => import("./pages/AllocationPage.jsx");
+const loadAssistant = () => import("./pages/AssistantPage.jsx");
+const loadDashboard = () => import("./pages/DashboardPage.jsx");
+const loadDriver = () => import("./pages/DriverPage.jsx");
+const loadInventory = () => import("./pages/InventoryPage.jsx");
+const loadRequester = () => import("./pages/RequesterPage.jsx");
+const loadTracker = () => import("./pages/RequesterTrackerPage.jsx");
+const loadRequests = () => import("./pages/RequestsPage.jsx");
+const loadSimulator = () => import("./pages/SimulatorPage.jsx");
+
+const AllocationPage = lazy(loadAllocation);
+const AssistantPage = lazy(loadAssistant);
+const DashboardPage = lazy(loadDashboard);
+const DriverPage = lazy(loadDriver);
+const InventoryPage = lazy(loadInventory);
 const Karwan = lazy(() => import("./pages/Karwan.jsx"));
 const LoginPage = lazy(() => import("./pages/LoginPage.jsx"));
-const RequesterPage = lazy(() => import("./pages/RequesterPage.jsx"));
-const RequesterTrackerPage = lazy(() => import("./pages/RequesterTrackerPage.jsx"));
-const RequestsPage = lazy(() => import("./pages/RequestsPage.jsx"));
-const SimulatorPage = lazy(() => import("./pages/SimulatorPage.jsx"));
+const RequesterPage = lazy(loadRequester);
+const RequesterTrackerPage = lazy(loadTracker);
+const RequestsPage = lazy(loadRequests);
+const SimulatorPage = lazy(loadSimulator);
+
+const ROUTE_LOADERS = {
+  "/allocation": loadAllocation,
+  "/assistant": loadAssistant,
+  "/dashboard": loadDashboard,
+  "/driver": loadDriver,
+  "/inventory": loadInventory,
+  "/requester": loadRequester,
+  "/tracker": loadTracker,
+  "/requests": loadRequests,
+  "/simulator": loadSimulator,
+};
 
 // Labels are translation keys, resolved with t() where they are shown.
 const PUBLIC_NAV = {
@@ -73,13 +95,26 @@ export default function App() {
     aiHealth().catch(() => {});
   }, []);
 
+  useEffect(() => {
+    if (location.pathname !== "/" || navigator.connection?.saveData) return undefined;
+    const connection = navigator.connection?.effectiveType || "";
+    if (connection.includes("2g")) return undefined;
+    const warm = () => loadRequester();
+    const id = window.requestIdleCallback
+      ? window.requestIdleCallback(warm, { timeout: 3000 })
+      : window.setTimeout(warm, 1800);
+    return () => window.requestIdleCallback
+      ? window.cancelIdleCallback(id)
+      : window.clearTimeout(id);
+  }, [location.pathname]);
+
   if (location.pathname === "/") {
     return (
       <Suspense fallback={<PageLoader />}>
         <Karwan
           onSubmitRequest={() => navigate("/requester")}
           demoButton={
-            <OpenDemoButton onLogin={handleLogin} className="pill outline" />
+            <OpenDemoButton onLogin={handleLogin} onIntent={loadDashboard} className="pill outline" />
           }
         />
         <SiteChatWidget />
@@ -120,6 +155,8 @@ export default function App() {
             <NavLink
               key={to}
               to={to}
+              onPointerEnter={ROUTE_LOADERS[to]}
+              onFocus={ROUTE_LOADERS[to]}
               className={({ isActive }) =>
                 `rounded-ui px-3 py-2 text-sm font-medium ${isActive ? "bg-ink text-white" : "hover:bg-paper"}`
               }

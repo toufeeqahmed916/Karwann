@@ -3,7 +3,7 @@ import { demoCoordinatorAccount } from "../lib/auth.js";
 import { useLanguage } from "../lib/i18n.jsx";
 
 /** Judges' shortcut: creates the same client-side coordinator session as the login form, then opens /dashboard. */
-export default function OpenDemoButton({ onLogin, className = "btn-lime" }) {
+export default function OpenDemoButton({ onLogin, onIntent, className = "btn-lime" }) {
   const navigate = useNavigate();
   const { t } = useLanguage();
 
@@ -12,5 +12,9 @@ export default function OpenDemoButton({ onLogin, className = "btn-lime" }) {
     navigate("/dashboard", { replace: true });
   }
 
-  return <button type="button" className={className} onClick={open}>{t("demo.open")}</button>;
+  return (
+    <button type="button" className={className} onPointerEnter={onIntent} onFocus={onIntent} onClick={open}>
+      {t("demo.open")}
+    </button>
+  );
 }

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { memo, useEffect, useMemo } from "react";
 import { MapContainer, TileLayer, Marker, ScaleControl, Tooltip, useMap, useMapEvents, ZoomControl } from "react-leaflet";
 import L from "leaflet";
 import { MAP_CENTER, MAP_ZOOM, markerColor } from "../lib/constants.js";
@@ -30,10 +30,14 @@ const pinIcon = L.divIcon({
   iconAnchor: [11, 28],
 });
 
+const requestIconCache = new Map();
+
 function requestIcon(request, selected) {
   const size = selected ? 32 : 27;
   const color = markerColor(request);
-  return L.divIcon({
+  const cacheKey = `${color}:${size}`;
+  if (requestIconCache.has(cacheKey)) return requestIconCache.get(cacheKey);
+  const icon = L.divIcon({
     className: "",
     html: `
       <div style="display:grid;place-items:center;width:${size}px;height:${size}px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))">
@@ -46,7 +50,33 @@ function requestIcon(request, selected) {
     iconSize: [size, size],
     iconAnchor: [size / 2, size / 2],
   });
+  requestIconCache.set(cacheKey, icon);
+  return icon;
 }
+
+const DepotMarker = memo(function DepotMarker({ depot, label }) {
+  return (
+    <Marker position={[depot.lat, depot.lng]} icon={depotIcon}>
+      <Tooltip><span dir="auto">{label}</span></Tooltip>
+    </Marker>
+  );
+});
+
+const RequestMarker = memo(function RequestMarker({ request, selected, onSelect, label }) {
+  const handlers = useMemo(
+    () => (onSelect ? { click: () => onSelect(request.id) } : undefined),
+    [onSelect, request.id],
+  );
+  return (
+    <Marker
+      position={[request.lat, request.lng]}
+      icon={requestIcon(request, selected)}
+      eventHandlers={handlers}
+    >
+      <Tooltip><span dir="auto">{label}</span></Tooltip>
+    </Marker>
+  );
+});
 
 function ClickCatcher({ onPick }) {
   useMapEvents({ click: (e) => onPick && onPick({ lat: +e.latlng.lat.toFixed(4), lng: +e.latlng.lng.toFixed(4) }) });
@@ -73,28 +103,32 @@ export default function MapView({ requests = [], depots = [], selectedId, onSele
         center={MAP_CENTER}
         zoom={MAP_ZOOM}
         zoomControl={false}
+        preferCanvas
         style={{ height: "100%", width: "100%" }}
         className={`karwan-map rounded-panel${pinCursor ? " map-pick-cursor" : ""}`}
       >
         <ZoomControl position="topright" zoomInTitle={t("map.zoomIn")} zoomOutTitle={t("map.zoomOut")} />
         <ScaleControl position="bottomleft" imperial={false} />
-        <TileLayer attribution="&copy; OpenStreetMap" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        <TileLayer
+          attribution="&copy; OpenStreetMap"
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          updateWhenIdle
+          updateWhenZooming={false}
+          keepBuffer={2}
+        />
         {onPick && <ClickCatcher onPick={onPick} />}
         {focusPin && <FocusPin pin={pin} />}
         {depots.map((d) => (
-          <Marker key={d.id} position={[d.lat, d.lng]} icon={depotIcon}>
-            <Tooltip><span dir="auto">{place(d.name)}</span></Tooltip>
-          </Marker>
+          <DepotMarker key={d.id} depot={d} label={place(d.name)} />
         ))}
         {requests.map((r) => (
-          <Marker
+          <RequestMarker
             key={r.id}
-            position={[r.lat, r.lng]}
-            icon={requestIcon(r, r.id === selectedId)}
-            eventHandlers={{ click: () => onSelect && onSelect(r.id) }}
-          >
-            <Tooltip><span dir="auto">{t("map.requestTooltip", { area: place(r.area), score: num(r.score.total) })}</span></Tooltip>
-          </Marker>
+            request={r}
+            selected={r.id === selectedId}
+            onSelect={onSelect}
+            label={t("map.requestTooltip", { area: place(r.area), score: num(r.score.total) })}
+          />
         ))}
         {pin && <Marker position={[pin.lat, pin.lng]} icon={pinIcon}><Tooltip><span dir="auto">{t("map.selectedLocation")}</span></Tooltip></Marker>}
         {children}

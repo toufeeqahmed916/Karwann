@@ -112,6 +112,13 @@
 
 .karwan-map .leaflet-control-attribution a { color: #16181d; font-weight: 600; }
 
+/* Delivery polling supplies discrete positions; interpolate them visually so
+   the truck glides along its route instead of jumping between updates. */
+.karwan-map .karwan-truck-marker {
+  transition: transform 1.6s linear;
+  will-change: transform;
+}
+
 /* Location-picking maps use the same compact pin shown after a point is selected. */
 .map-pick-cursor,
 .map-pick-cursor.leaflet-grab,

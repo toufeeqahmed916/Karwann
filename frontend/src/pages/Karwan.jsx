@@ -6,11 +6,11 @@ import LanguageToggle from "../components/LanguageToggle.jsx";
 import { useLanguage } from "../lib/i18n.jsx";
 
 const heroImages = [
-  "https://images.unsplash.com/photo-1547683905-f686c993aae5?auto=format&fit=crop&w=2000&q=90",
-  "https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=2000&q=90",
-  "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=2000&q=90",
-  "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=2000&q=90",
-  "https://images.unsplash.com/photo-1594708767771-a7502209ff51?auto=format&fit=crop&w=2000&q=90",
+  "https://images.unsplash.com/photo-1547683905-f686c993aae5?auto=format&fit=crop&w=1600&q=72",
+  "https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=1600&q=72",
+  "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=1600&q=72",
+  "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1600&q=72",
+  "https://images.unsplash.com/photo-1594708767771-a7502209ff51?auto=format&fit=crop&w=1600&q=72",
 ];
 
 /* "|" = line break, "*text*" = highlighted span */
@@ -95,6 +95,7 @@ export default function Karwan({ onSubmitRequest, demoButton = null }) {
   const rootRef = useRef(null);
   const areaRef = useRef(null);
   const toastTimer = useRef(null);
+  const loadedHeroSlides = useRef(new Set([0]));
 
   /* ---------- language: one shared choice (English / Urdu / Sindhi), remembered between visits ---------- */
   const { lang } = useLanguage();
@@ -141,6 +142,23 @@ export default function Karwan({ onSubmitRequest, demoButton = null }) {
     );
     return () => clearTimeout(timer);
   }, [current, timerKey, t.slides.length]);
+
+  // Fetch only the next hero while the browser is idle. Keeping URLs off the
+  // other slide elements prevents five large photos downloading at once.
+  useEffect(() => {
+    const nextIndex = (current + 1) % heroImages.length;
+    const warm = () => {
+      const next = new Image();
+      next.src = heroImages[nextIndex];
+      loadedHeroSlides.current.add(nextIndex);
+    };
+    const id = window.requestIdleCallback
+      ? window.requestIdleCallback(warm, { timeout: 2200 })
+      : window.setTimeout(warm, 1200);
+    return () => window.requestIdleCallback
+      ? window.cancelIdleCallback(id)
+      : window.clearTimeout(id);
+  }, [current]);
 
   const goToSlide = (i) => {
     setCurrent(i);
@@ -217,6 +235,7 @@ export default function Karwan({ onSubmitRequest, demoButton = null }) {
   );
   const simMessage =
     f >= 78 ? t.sim.msgOk : f >= 60 ? t.sim.msgMid : t.sim.msgLow;
+  loadedHeroSlides.current.add(current);
 
   const resetSim = () => {
     setDemand(10);
@@ -230,7 +249,7 @@ export default function Karwan({ onSubmitRequest, demoButton = null }) {
   const L = t.dashboard.legend;
 
   return (
-    <div ref={rootRef} dir={t.dir} lang={lang} className={isUr ? "rtl" : ""}>
+    <div ref={rootRef} dir={t.dir} lang={lang} className={`karwan-landing${isUr ? " rtl" : ""}`}>
       <header className={`nav${scrolled ? " visible" : ""}`}>
         <a className="brand" href="#home" aria-label={t.brandLabel}>
           <BrandLogo variant="ink" height={34} iconOnly={isUr} text={t.brand} />
@@ -292,7 +311,7 @@ export default function Karwan({ onSubmitRequest, demoButton = null }) {
               <div
                 key={i}
                 className={`heroSlide${current === i ? " active" : ""}`}
-                style={{ backgroundImage: `url('${img}')` }}
+                style={loadedHeroSlides.current.has(i) ? { backgroundImage: `url('${img}')` } : undefined}
               ></div>
             ))}
           </div>
@@ -570,6 +589,8 @@ export default function Karwan({ onSubmitRequest, demoButton = null }) {
                 <img
                   src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=1200&q=85"
                   alt={t.impact.storyAlt}
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div className="storyCopy">
                   <div className="kicker">{t.impact.storyKicker}</div>
@@ -611,7 +632,7 @@ export default function Karwan({ onSubmitRequest, demoButton = null }) {
                 "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80",
               ].map((src, i) => (
                 <article className="newsCard reveal" key={i}>
-                  <img src={src} alt={t.impact.news[i].alt} />
+                  <img src={src} alt={t.impact.news[i].alt} loading="lazy" decoding="async" />
                   <div>
                     <small>{t.impact.news[i].tag}</small>
                     <h3>{t.impact.news[i].title}</h3>

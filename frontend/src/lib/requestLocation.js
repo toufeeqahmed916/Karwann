@@ -45,7 +45,9 @@ function deviceLocation() {
         accuracyKm: coordinate(coords.accuracy / 1000),
       }),
       reject,
-      { enableHighAccuracy: true, timeout: 8000, maximumAge: 5 * 60 * 1000 },
+      // A town-level initial pin does not need a slow GPS lock; the requester
+      // can still place the exact point manually.
+      { enableHighAccuracy: false, timeout: 5000, maximumAge: 10 * 60 * 1000 },
     );
   });
 }
