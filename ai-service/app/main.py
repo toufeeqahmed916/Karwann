@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .config import Settings, get_settings
 from .errors import AppError, error_response, new_request_id, register_error_handlers
-from .routes import chat, health, intake, site_chat, transcribe
+from .routes import chat, health, intake, site_chat, speak, transcribe, translate
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
 # These libraries can log full URLs / headers at INFO. Keep them quiet so no key or audio detail leaks into logs.
@@ -49,6 +49,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 log.error("Unhandled %s on %s", type(exc).__name__, request.url.path)
                 response = error_response(request, AppError("AI_UNAVAILABLE"))
         response.headers["X-Request-Id"] = request.state.request_id
+        response.headers["Cache-Control"] = "no-store"
+        response.headers["Referrer-Policy"] = "no-referrer"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
         return response
 
     app.add_middleware(
@@ -65,6 +69,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(transcribe.router)
     app.include_router(chat.router)
     app.include_router(site_chat.router)
+    app.include_router(speak.router)
+    app.include_router(translate.router)
     return app
 
 

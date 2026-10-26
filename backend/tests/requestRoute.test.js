@@ -45,6 +45,7 @@ describe("request endpoints", () => {
     createRequest.mockResolvedValue(requestRecord);
     const body = {
       area: "Dadu",
+      complaintText: "Flood water has entered several homes.",
       lat: 26.73,
       lng: 67.78,
       population: 4200,
@@ -57,7 +58,7 @@ describe("request endpoints", () => {
     const response = await request(createApp()).post("/api/requests").send(body);
 
     expect(response.status).toBe(201);
-    expect(createRequest).toHaveBeenCalledWith(body);
+    expect(createRequest).toHaveBeenCalledWith(body, { ip: "127.0.0.1" });
     expect(response.body).toEqual({ data: requestRecord });
   });
 

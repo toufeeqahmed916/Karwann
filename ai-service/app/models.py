@@ -9,7 +9,7 @@ Urgency = Literal["low", "medium", "high", "critical"]
 Access = Literal["easy", "medium", "hard"]
 Vulnerable = Literal["children", "elderly", "medical"]
 SupplyItem = Literal["food", "water", "medicine", "shelter"]
-Language = Literal["en", "ur"]
+Language = Literal["en", "ur", "sd"]  # English, Urdu, Sindhi
 
 
 def _clamp01(value):
@@ -54,6 +54,7 @@ class IntakeResult(BaseModel):
     access: Access | None
     detectedLanguage: Language
     englishText: str
+    transcript: str
     confidence: Confidence
 
 
@@ -93,6 +94,24 @@ class ChatResponse(BaseModel):
     inScope: bool
     answer: str
     sources: list[SourceRef]
+
+
+# ---- /speak (text to speech) ----
+class SpeakRequest(BaseModel):
+    text: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=1200)]
+    language: Language
+
+
+# ---- /translate ----
+class TranslateRequest(BaseModel):
+    text: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=2000)]
+    targetLanguage: Language
+
+
+class TranslateResult(BaseModel):
+    """Also Gemini's response schema, so no defaults."""
+
+    text: str
 
 
 # ---- error envelope (documentation only; never sent to Gemini) ----

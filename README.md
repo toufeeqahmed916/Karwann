@@ -114,7 +114,7 @@ You need **Node.js 22+**, **Python 3.11+**, a free [Supabase](https://supabase.c
 
 ```bash
 cd backend
-cp .env.example .env     # SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, SUPABASE_SECRET_KEY, SUPABASE_JWKS_URL, CLIENT_ORIGIN=http://localhost:5173
+cp .env.example .env     # SUPABASE_URL, SUPABASE_SECRET_KEY, SUPABASE_JWKS_URL, CLIENT_ORIGIN=http://localhost:5173
 npm install
 npm run dev              # http://localhost:4000
 ```
@@ -246,7 +246,6 @@ Open http://localhost:5173, press **Open demo as Coordinator**, and follow the [
 - **Driver app**: assigned load, route, *Start trip*, *Mark delivered*.
 - **Requester tracker** with progress, ETA and live truck position.
 - **Live updates** over Supabase Realtime with automatic polling fallback.
-- **Skip +6 hours** to show how waiting time moves requests up the ranking.
 - **One-click demo reset**, role-based screens, and a bilingual landing page.
 
 ### Who uses what

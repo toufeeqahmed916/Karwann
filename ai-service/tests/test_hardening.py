@@ -52,7 +52,12 @@ def test_oversized_body_rejected_before_reading():
 
 def test_request_id_echoed_only_when_safe():
     c = make_client()
-    assert c.get("/health", headers={"X-Request-Id": "req_trace_123"}).headers["x-request-id"] == "req_trace_123"
+    response = c.get("/health", headers={"X-Request-Id": "req_trace_123"})
+    assert response.headers["x-request-id"] == "req_trace_123"
+    assert response.headers["cache-control"] == "no-store"
+    assert response.headers["referrer-policy"] == "no-referrer"
+    assert response.headers["x-content-type-options"] == "nosniff"
+    assert response.headers["x-frame-options"] == "DENY"
     weird = c.get("/health", headers={"X-Request-Id": "bad id with spaces <script>"})
     assert weird.headers["x-request-id"].startswith("req_") and "script" not in weird.headers["x-request-id"]
 
@@ -60,12 +65,12 @@ def test_request_id_echoed_only_when_safe():
 def test_service_exposes_only_the_documented_endpoints():
     spec = create_app(Settings()).openapi()  # lists every real API operation (no PUT/PATCH/DELETE exist)
     api = {(method.upper(), path) for path, ops in spec["paths"].items() for method in ops}
-    assert api =={("GET", "/health"), ("POST", "/intake"), ("POST", "/transcribe"), ("POST", "/chat"), ("POST", "/site-chat")}
+    assert api =={("GET", "/health"), ("POST", "/intake"), ("POST", "/transcribe"), ("POST", "/chat"), ("POST", "/site-chat"), ("POST", "/speak"), ("POST", "/translate")}
 
 
 def test_openapi_documents_examples_for_every_endpoint():
     spec = create_app(Settings()).openapi()
-    assert set(spec["paths"]) == {"/health", "/intake", "/transcribe", "/chat", "/site-chat"}
+    assert set(spec["paths"]) == {"/health", "/intake", "/transcribe", "/chat", "/site-chat", "/speak", "/translate"}
     for path in ("/intake", "/transcribe", "/chat"):
         responses = spec["paths"][path]["post"]["responses"]
         assert "200" in responses and ("429" in responses or "503" in responses)

@@ -16,6 +16,8 @@ export default {
         wait: "#E3C21B",
         transit: "#2F6FDE",
         done: "#2E9D5B",
+        ok: "#2E9D5B",
+        warn: "#E3C21B",
       },
       fontFamily: {
         display: ["Archivo", "system-ui", "sans-serif"],

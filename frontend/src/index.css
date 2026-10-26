@@ -20,9 +20,315 @@
 }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 
-/* Urdu / right-to-left: only containers that set dir="rtl" (the AI screens) change font and spacing. */
+/* Shared visual treatment for every Leaflet map in the application. */
+.karwan-map {
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(22, 24, 29, 0.14);
+  background: #e9ece5;
+  box-shadow:
+    0 14px 35px rgba(22, 24, 29, 0.11),
+    0 2px 8px rgba(22, 24, 29, 0.06);
+}
+
+.karwan-map::after {
+  position: absolute;
+  inset: 0;
+  z-index: 450;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+  pointer-events: none;
+  content: "";
+}
+
+.karwan-map .leaflet-tile-pane {
+  filter: saturate(0.72) contrast(1.04) brightness(1.03);
+}
+
+.karwan-map .leaflet-control-zoom {
+  overflow: hidden;
+  margin-top: 14px;
+  margin-right: 14px;
+  border: 0;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(22, 24, 29, 0.2);
+}
+
+.karwan-map .leaflet-control-zoom a {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  background: #16181d;
+  color: #fff;
+  font: 500 20px/1 system-ui, sans-serif;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.karwan-map .leaflet-control-zoom a:last-child { border-bottom: 0; }
+.karwan-map .leaflet-control-zoom a:hover,
+.karwan-map .leaflet-control-zoom a:focus { background: #c4f135; color: #16181d; }
+.karwan-map .leaflet-control-zoom a.leaflet-disabled { background: #42454c; color: #aeb1b8; }
+
+.karwan-map .leaflet-control-scale { margin-bottom: 14px; margin-left: 14px; }
+.karwan-map .leaflet-control-scale-line {
+  border: 0;
+  border-radius: 999px;
+  padding: 4px 9px;
+  background: rgba(22, 24, 29, 0.82);
+  box-shadow: 0 3px 10px rgba(22, 24, 29, 0.18);
+  color: #fff;
+  font-size: 10px;
+  line-height: 1.2;
+  text-shadow: none;
+}
+
+.karwan-map .leaflet-tooltip {
+  border: 0;
+  border-radius: 9px;
+  padding: 7px 10px;
+  background: rgba(22, 24, 29, 0.94);
+  box-shadow: 0 5px 16px rgba(22, 24, 29, 0.2);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.karwan-map .leaflet-tooltip-top::before { border-top-color: rgba(22, 24, 29, 0.94); }
+.karwan-map .leaflet-tooltip-bottom::before { border-bottom-color: rgba(22, 24, 29, 0.94); }
+.karwan-map .leaflet-tooltip-left::before { border-left-color: rgba(22, 24, 29, 0.94); }
+.karwan-map .leaflet-tooltip-right::before { border-right-color: rgba(22, 24, 29, 0.94); }
+
+.karwan-map .leaflet-control-attribution {
+  margin: 0 6px 6px 0;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.82);
+  color: #555b63;
+  font-size: 9px;
+  backdrop-filter: blur(5px);
+}
+
+.karwan-map .leaflet-control-attribution a { color: #16181d; font-weight: 600; }
+
+/* Location-picking maps use the same compact pin shown after a point is selected. */
+.map-pick-cursor,
+.map-pick-cursor.leaflet-grab,
+.map-pick-cursor .leaflet-interactive,
+.map-pick-cursor .leaflet-marker-icon {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='28' viewBox='0 0 24 32' fill='none'%3E%3Cpath d='M12 1.5A10.5 10.5 0 0 0 1.5 12c0 7.7 10.5 18.5 10.5 18.5S22.5 19.7 22.5 12A10.5 10.5 0 0 0 12 1.5Z' fill='%23C4F135' stroke='%2316181D' stroke-width='2'/%3E%3Ccircle cx='12' cy='12' r='3.5' fill='%2316181D'/%3E%3C/svg%3E") 11 27, crosshair !important;
+}
+
+/* Urdu / right-to-left: the whole page is dir="rtl" in Urdu, so every screen uses the Urdu font and spacing. */
 @layer base {
   [dir="rtl"], [dir="rtl"] * { font-family: "Noto Naskh Arabic", "Segoe UI", Tahoma, sans-serif; }
   [dir="rtl"] { line-height: 1.8; }
   [dir="rtl"] .font-mono, [dir="rtl"] [dir="ltr"] { font-family: inherit; }
+}
+
+/* Urdu joins its letters: never add letter-spacing or force capitals. */
+html[lang="ur"] *, html[lang="sd"] * { letter-spacing: normal !important; text-transform: none !important; }
+/* Leaflet draws its own controls; keep them left-to-right. */
+.leaflet-container { direction: ltr; }
+
+/* Friendly floating help mascot. The callout points inward in both LTR and RTL layouts. */
+.karwan-help-launcher {
+  width: 104px;
+  height: 112px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  filter: drop-shadow(0 12px 18px rgba(22, 24, 29, 0.22));
+  isolation: isolate;
+}
+
+.karwan-help-mascot-wrap {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 96px;
+  height: 102px;
+  animation: karwanMascotFloat 3.2s ease-in-out infinite;
+  transform-origin: 52% 88%;
+}
+
+.karwan-help-mascot-wrap::before {
+  position: absolute;
+  inset: 16% 10% 4%;
+  z-index: -1;
+  border-radius: 50%;
+  background: rgba(196, 241, 53, 0.28);
+  content: "";
+  filter: blur(12px);
+  animation: karwanMascotGlow 2.4s ease-in-out infinite;
+}
+
+.karwan-help-mascot {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  animation: karwanMascotWave 4.2s ease-in-out infinite;
+  transform-origin: 52% 88%;
+  transition: transform 180ms ease, filter 180ms ease;
+}
+
+.karwan-help-callout {
+  position: absolute;
+  top: 4px;
+  right: calc(100% - 18px);
+  z-index: 2;
+  min-width: max-content;
+  padding: 9px 13px;
+  border: 1px solid rgba(22, 24, 29, 0.12);
+  border-radius: 14px 14px 4px 14px;
+  background: #fffef8;
+  box-shadow: 0 8px 24px rgba(22, 24, 29, 0.14);
+  color: #16181d;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.15;
+  animation: karwanHelpCallout 4.8s ease-in-out infinite;
+}
+
+.karwan-help-callout::after {
+  position: absolute;
+  right: -6px;
+  bottom: -1px;
+  width: 13px;
+  height: 13px;
+  border-right: 1px solid rgba(22, 24, 29, 0.12);
+  border-bottom: 1px solid rgba(22, 24, 29, 0.12);
+  background: #fffef8;
+  content: "";
+  transform: rotate(-35deg) skew(-10deg);
+}
+
+.karwan-help-callout-text {
+  display: block;
+  animation: karwanCalloutTextIn 320ms cubic-bezier(.2,.8,.2,1) both;
+}
+
+.karwan-help-typing {
+  display: inline-flex;
+  min-width: 38px;
+  min-height: 15px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.karwan-help-typing i {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: #16181d;
+  animation: karwanTypingDot 700ms ease-in-out infinite alternate;
+}
+
+.karwan-help-typing i:nth-child(2) { animation-delay: 120ms; }
+.karwan-help-typing i:nth-child(3) { animation-delay: 240ms; }
+
+[dir="rtl"] .karwan-help-callout {
+  right: auto;
+  left: calc(100% - 18px);
+  border-radius: 14px 14px 14px 4px;
+}
+
+[dir="rtl"] .karwan-help-callout::after {
+  right: auto;
+  left: -6px;
+  transform: rotate(125deg) skew(-10deg);
+}
+
+.karwan-help-launcher:hover .karwan-help-mascot,
+.karwan-help-launcher:focus-visible .karwan-help-mascot {
+  filter: saturate(1.08) brightness(1.05);
+  transform: rotate(-4deg) scale(1.07);
+}
+
+@keyframes karwanMascotFloat {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  48% { transform: translateY(-8px) rotate(2deg); }
+  56% { transform: translateY(-8px) rotate(-2deg); }
+}
+
+@keyframes karwanMascotWave {
+  0%, 18%, 100% { transform: rotate(0) scale(1); }
+  5% { transform: rotate(-5deg) scale(1.025); }
+  9% { transform: rotate(4deg) scale(1.025); }
+  13% { transform: rotate(-3deg) scale(1.015); }
+}
+
+@keyframes karwanMascotGlow {
+  0%, 100% { opacity: .45; transform: scale(.84); }
+  50% { opacity: .9; transform: scale(1.08); }
+}
+
+@keyframes karwanCalloutTextIn {
+  from { opacity: 0; transform: translateY(4px) scale(.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes karwanTypingDot {
+  from { opacity: .28; transform: translateY(2px); }
+  to { opacity: 1; transform: translateY(-2px); }
+}
+
+@keyframes karwanHelpCallout {
+  0%, 72%, 100% { transform: translateY(0) scale(1); }
+  78% { transform: translateY(-3px) scale(1.035); }
+  84% { transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 560px) {
+  .karwan-help-launcher { width: 82px; height: 90px; }
+  .karwan-help-mascot-wrap { width: 78px; height: 84px; }
+  .karwan-help-callout { top: 0; right: calc(100% - 14px); padding: 7px 10px; font-size: 11px; }
+  [dir="rtl"] .karwan-help-callout { right: auto; left: calc(100% - 14px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .karwan-help-mascot-wrap,
+  .karwan-help-mascot-wrap::before,
+  .karwan-help-mascot,
+  .karwan-help-callout,
+  .karwan-help-callout-text,
+  .karwan-help-typing i { animation: none !important; }
+}
+
+/* Accessible native language menu with a consistent branded treatment. */
+select.language-toggle {
+  appearance: none;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='m5 7.5 5 5 5-5' stroke='%2316181D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  cursor: pointer;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease, transform 160ms ease;
+}
+
+select.language-toggle:hover {
+  border-color: rgba(22, 24, 29, .38);
+  background-color: #fbfce9;
+  transform: translateY(-1px);
+}
+
+select.language-toggle:focus-visible {
+  border-color: #16181d;
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(196, 241, 53, .55), 0 4px 14px rgba(22, 24, 29, .1);
+}
+
+select.language-toggle option {
+  background: #fff;
+  color: #16181d;
+  font-family: system-ui, sans-serif;
+}
+
+[dir="rtl"] select.language-toggle {
+  padding-right: .75rem;
+  padding-left: 2.25rem;
+  background-position: left 12px center;
 }

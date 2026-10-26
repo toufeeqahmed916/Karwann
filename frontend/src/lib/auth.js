@@ -1,13 +1,14 @@
 const SESSION_KEY = "karwan-staff-session";
 
 export const ROLE_CONFIG = {
-  depot: { label: "Depot manager", home: "/inventory", links: [["/inventory", "Inventory"]] },
+  // Labels are translation keys (see src/locales), resolved where they are shown.
+  depot: { labelKey: "role.depot", home: "/inventory", links: [["/inventory", "nav.inventory"]] },
   coordinator: {
-    label: "Coordinator",
+    labelKey: "role.coordinator",
     home: "/requests",
-    links: [["/dashboard", "Dashboard"], ["/requests", "Requests"], ["/allocation", "Allocation"], ["/simulator", "Simulator"], ["/assistant", "Assistant"]],
+    links: [["/dashboard", "nav.dashboard"], ["/requests", "nav.requests"], ["/allocation", "nav.allocation"], ["/assistant", "nav.assistant"]],
   },
-  driver: { label: "Driver", home: "/driver", links: [["/driver", "Delivery"]] },
+  driver: { labelKey: "role.driver", home: "/driver", links: [["/driver", "nav.delivery"]] },
 };
 
 const CREDENTIALS = {
@@ -26,9 +27,9 @@ export function getCredentialsForRole(role) {
 
 export function authenticate(role, username, password) {
   const expected = CREDENTIALS[role];
-  if (!expected?.username || !expected?.password) return { ok: false, error: "Login credentials are not configured." };
+  if (!expected?.username || !expected?.password) return { ok: false, errorKey: "login.notConfigured" };
   if (username.trim() !== expected.username || password !== expected.password) {
-    return { ok: false, error: "The account name or password is incorrect for the selected role." };
+    return { ok: false, errorKey: "login.wrong" };
   }
   return { ok: true, account: { role, username: expected.username } };
 }

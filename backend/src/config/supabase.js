@@ -17,11 +17,3 @@ export const supabaseAdmin = createClient(
   env.supabaseSecretKey,
   commonOptions,
 );
-
-// Kept for future endpoints that intentionally need the same read permissions
-// as the public frontend. Phase 1 does not expose authentication endpoints.
-export const supabasePublic = createClient(
-  env.supabaseUrl,
-  env.supabasePublishableKey,
-  commonOptions,
-);

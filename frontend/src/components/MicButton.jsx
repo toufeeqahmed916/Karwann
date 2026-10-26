@@ -38,7 +38,7 @@ export default function MicButton({ onRecorded, onError, disabled = false, label
     try {
       stream.current = await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch {
-      onError?.(t("mic.blocked"));
+      onError?.({ key: "mic.blocked" });
       return;
     }
     const mimeType = MIME_CANDIDATES.find((m) => MediaRecorder.isTypeSupported?.(m));
@@ -51,7 +51,7 @@ export default function MicButton({ onRecorded, onError, disabled = false, label
       const wasCancelled = cancelled.current;
       cleanup();
       if (wasCancelled) return;
-      if (blob.size < 1000) onError?.(t("mic.silent"));
+      if (blob.size < 1000) onError?.({ key: "mic.silent" });
       else onRecorded(blob);
     };
     recorder.current = rec;

@@ -8,6 +8,11 @@ vi.mock("../src/repositories/requestRepository.js", () => ({
 vi.mock("../src/repositories/scoringRepository.js", () => ({
   findRequestsForScoring: vi.fn(),
 }));
+vi.mock("../src/repositories/authenticityReviewRepository.js", () => ({
+  findAuthenticityReviewsByRequestIds: vi.fn(),
+  findRecentAuthenticityCandidates: vi.fn(),
+  saveAuthenticityReview: vi.fn(),
+}));
 vi.mock("../src/repositories/settingsRepository.js", () => ({
   findTimeOffsetHours: vi.fn(),
   findWeights: vi.fn(),
@@ -15,6 +20,7 @@ vi.mock("../src/repositories/settingsRepository.js", () => ({
 
 import { findTrackingByRequestId } from "../src/repositories/requestRepository.js";
 import { findRequestsForScoring } from "../src/repositories/scoringRepository.js";
+import { findAuthenticityReviewsByRequestIds } from "../src/repositories/authenticityReviewRepository.js";
 import {
   findTimeOffsetHours,
   findWeights,
@@ -71,6 +77,7 @@ describe("request service", () => {
     findRequestsForScoring.mockResolvedValue(requestRows);
     findWeights.mockResolvedValue(weights);
     findTimeOffsetHours.mockResolvedValue(0);
+    findAuthenticityReviewsByRequestIds.mockResolvedValue([]);
   });
 
   it("filters the scored request list", async () => {

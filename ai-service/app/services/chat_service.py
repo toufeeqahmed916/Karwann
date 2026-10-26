@@ -2,17 +2,18 @@
 from __future__ import annotations
 
 from ..models import ChatModelOutput, ChatResponse
-from ..prompts.chat import CHAT_SYSTEM_PROMPT, FIXED_REFUSAL, chat_user_prompt
+from ..prompts.chat import CHAT_SYSTEM_PROMPT, FIXED_REFUSAL, FIXED_REFUSALS, chat_user_prompt
 from .chat_context import build_context
 from .gemini_client import GeminiLike
 from .karwan_api_client import KarwanLike
 from .structured import generate_validated
+from .text_clean import strip_stray_scripts
 
 MAX_SOURCES = 6
 
 
-def refusal() -> ChatResponse:
-    return ChatResponse(inScope=False, answer=FIXED_REFUSAL, sources=[])
+def refusal(ui_language: str = "en") -> ChatResponse:
+    return ChatResponse(inScope=False, answer=FIXED_REFUSALS.get(ui_language, FIXED_REFUSAL), sources=[])
 
 
 async def answer_question(
@@ -29,7 +30,7 @@ async def answer_question(
         schema=ChatModelOutput,
     )
     if not out.inScope or not out.answer.strip():
-        return refusal()  # the exact fixed refusal, never the model's wording
+        return refusal(ui_language)  # the exact fixed refusal, never the model's wording
 
     seen: set[tuple[str, str]] = set()
     sources = []
@@ -38,4 +39,4 @@ async def answer_question(
         if key in known and key not in seen:  # drop ids the model made up
             seen.add(key)
             sources.append(ref)
-    return ChatResponse(inScope=True, answer=out.answer.strip(), sources=sources[:MAX_SOURCES])
+    return ChatResponse(inScope=True, answer=strip_stray_scripts(out.answer).strip(), sources=sources[:MAX_SOURCES])

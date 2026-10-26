@@ -44,7 +44,7 @@ def install(monkeypatch, behaviours):
 
 
 def client(timeout=5.0, keys=(KEY_A, KEY_B)):
-    return gc.GeminiClient(Settings(gemini_keys=list(keys), request_timeout_seconds=timeout))
+    return gc.GeminiClient(Settings(gemini_keys=list(keys), request_timeout_seconds=timeout, transient_retry_delays=()))
 
 
 def run(coro):
@@ -124,3 +124,31 @@ def test_backend_selection_ignores_key_prefix():
     assert gc._make_client(G, "AQ.something") == {"api_key": "AQ.something"}
     assert gc._make_client(G, "AIzaSomething", "auto") == {"api_key": "AIzaSomething"}
     assert gc._make_client(G, "AQ.something", "vertex") == {"vertexai": True, "api_key": "AQ.something"}
+
+
+def test_short_outage_is_retried_and_the_person_never_sees_it(monkeypatch):
+    attempts = {"n": 0}
+
+    def flaky():
+        attempts["n"] += 1
+        if attempts["n"] < 3:
+            raise genai_errors.ServerError(503, {"error": {"message": "This model is currently experiencing high demand."}})
+        return '{"ok": true}'
+
+    install(monkeypatch, {KEY_A: flaky})
+    c = gc.GeminiClient(Settings(gemini_keys=[KEY_A], request_timeout_seconds=5.0, transient_retry_delays=(0.0, 0.0)))
+    assert ask(c) == '{"ok": true}' and attempts["n"] == 3
+
+
+def test_outage_that_lasts_still_ends_in_a_clean_unavailable_error(monkeypatch):
+    attempts = {"n": 0}
+
+    def down():
+        attempts["n"] += 1
+        raise genai_errors.ServerError(503, {"error": {"message": "unavailable"}})
+
+    install(monkeypatch, {KEY_A: down})
+    c = gc.GeminiClient(Settings(gemini_keys=[KEY_A], request_timeout_seconds=5.0, transient_retry_delays=(0.0, 0.0)))
+    with pytest.raises(AppError) as e:
+        ask(c)
+    assert e.value.code == "AI_UNAVAILABLE" and attempts["n"] == 3

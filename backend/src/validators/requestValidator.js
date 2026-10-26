@@ -15,6 +15,7 @@ const CREATE_FIELDS = new Set([
   "vulnerable",
   "accessibility",
   "items",
+  "complaintText",
 ]);
 const UPDATE_FIELDS = new Set(["population", "urgency"]);
 const FILTER_FIELDS = new Set(["status", "item", "urgency"]);
@@ -67,6 +68,11 @@ export function validateCreateRequest(input) {
     invalid("area must contain between 2 and 120 characters");
   }
 
+  const complaintText = typeof input.complaintText === "string" ? input.complaintText.trim() : "";
+  if (complaintText.length < 10 || complaintText.length > 2000) {
+    invalid("complaintText must contain between 10 and 2000 characters");
+  }
+
   requireCoordinate("lat", input.lat, -90, 90);
   requireCoordinate("lng", input.lng, -180, 180);
   requirePositiveInteger("population", input.population);
@@ -107,6 +113,7 @@ export function validateCreateRequest(input) {
     vulnerable: input.vulnerable,
     accessibility: input.accessibility,
     items,
+    complaintText,
   };
 }
 

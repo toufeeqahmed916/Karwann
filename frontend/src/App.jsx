@@ -6,17 +6,7 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import { useEffect, useState } from "react";
-import RequestsPage from "./pages/RequestsPage.jsx";
-import RequesterPage from "./pages/RequesterPage.jsx";
-import InventoryPage from "./pages/InventoryPage.jsx";
-import DashboardPage from "./pages/DashboardPage.jsx";
-import AllocationPage from "./pages/AllocationPage.jsx";
-import SimulatorPage from "./pages/SimulatorPage.jsx";
-import AssistantPage from "./pages/AssistantPage.jsx";
-import DriverPage from "./pages/DriverPage.jsx";
-import RequesterTrackerPage from "./pages/RequesterTrackerPage.jsx";
-import LoginPage from "./pages/LoginPage.jsx";
+import { lazy, Suspense, useEffect, useState } from "react";
 import ResetDemoButton from "./components/ResetDemoButton.jsx";
 import LanguageToggle from "./components/LanguageToggle.jsx";
 import OpenDemoButton from "./components/OpenDemoButton.jsx";
@@ -28,16 +18,38 @@ import {
   saveSession,
 } from "./lib/auth.js";
 import { aiHealth } from "./lib/aiApi.js";
-import Karwan from "./pages/Karwan.jsx";
+import { useLanguage } from "./lib/i18n.jsx";
 import BrandLogo from "./components/BrandLogo.jsx";
 
+const AllocationPage = lazy(() => import("./pages/AllocationPage.jsx"));
+const AssistantPage = lazy(() => import("./pages/AssistantPage.jsx"));
+const DashboardPage = lazy(() => import("./pages/DashboardPage.jsx"));
+const DriverPage = lazy(() => import("./pages/DriverPage.jsx"));
+const InventoryPage = lazy(() => import("./pages/InventoryPage.jsx"));
+const Karwan = lazy(() => import("./pages/Karwan.jsx"));
+const LoginPage = lazy(() => import("./pages/LoginPage.jsx"));
+const RequesterPage = lazy(() => import("./pages/RequesterPage.jsx"));
+const RequesterTrackerPage = lazy(() => import("./pages/RequesterTrackerPage.jsx"));
+const RequestsPage = lazy(() => import("./pages/RequestsPage.jsx"));
+const SimulatorPage = lazy(() => import("./pages/SimulatorPage.jsx"));
+
+// Labels are translation keys, resolved with t() where they are shown.
 const PUBLIC_NAV = {
-  label: "Requester",
+  labelKey: "app.requesterLabel",
   links: [
-    ["/requester", "New request"],
-    ["/tracker", "Track delivery"],
+    ["/requester", "nav.newRequest"],
+    ["/tracker", "nav.track"],
   ],
 };
+
+function PageLoader() {
+  return (
+    <div className="grid min-h-[40vh] place-items-center" role="status" aria-live="polite">
+      <span className="h-9 w-9 animate-spin rounded-full border-4 border-line border-t-ink" />
+      <span className="sr-only">Loading</span>
+    </div>
+  );
+}
 
 function ProtectedRoute({ session, role, children }) {
   const location = useLocation();
@@ -53,6 +65,7 @@ export default function App() {
   const [session, setSession] = useState(() => getSession());
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useLanguage();
 
   useEffect(() => {
     // Wake a sleeping AI host as soon as any Karwan page opens. The website
@@ -62,7 +75,7 @@ export default function App() {
 
   if (location.pathname === "/") {
     return (
-      <>
+      <Suspense fallback={<PageLoader />}>
         <Karwan
           onSubmitRequest={() => navigate("/requester")}
           demoButton={
@@ -70,7 +83,7 @@ export default function App() {
           }
         />
         <SiteChatWidget />
-      </>
+      </Suspense>
     );
   }
   const navigation = session ? ROLE_CONFIG[session.role] : PUBLIC_NAV;
@@ -94,16 +107,16 @@ export default function App() {
       <header className="relative z-[1100] flex flex-wrap items-center gap-2 border-b border-line bg-card px-3 py-2 sm:gap-4 sm:px-4">
         <NavLink
           to="/requester"
-          aria-label="Karwan home"
+          aria-label={t("app.home")}
           className="flex shrink-0 items-center"
         >
           <BrandLogo variant="ink" height={28} />
         </NavLink>
         <span className="rounded-full bg-paper px-3 py-1 text-xs font-semibold text-mute">
-          {navigation.label}
+          {t(navigation.labelKey)}
         </span>
         <nav className="order-3 flex w-full gap-1 overflow-x-auto sm:order-none sm:w-auto">
-          {navigation.links.map(([to, label]) => (
+          {navigation.links.map(([to, labelKey]) => (
             <NavLink
               key={to}
               to={to}
@@ -111,11 +124,11 @@ export default function App() {
                 `rounded-ui px-3 py-2 text-sm font-medium ${isActive ? "bg-ink text-white" : "hover:bg-paper"}`
               }
             >
-              {label}
+              {t(labelKey)}
             </NavLink>
           ))}
         </nav>
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ms-auto flex items-center gap-2">
           <LanguageToggle />
           {session ? (
             <button
@@ -123,18 +136,19 @@ export default function App() {
               className="btn-ghost shrink-0"
               onClick={handleLogout}
             >
-              Logout
+              {t("app.logout")}
             </button>
           ) : (
             <NavLink to="/login" className="btn-ghost shrink-0">
-              Login
+              {t("app.login")}
             </NavLink>
           )}
           <ResetDemoButton />
         </div>
       </header>
       <main className="min-h-0 flex-1">
-        <Routes>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
           <Route path="/" element={<Navigate to="/karwan" replace />} />
           <Route
             path="/login"
@@ -198,9 +212,11 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-        </Routes>
+          <Route path="*" element={<Navigate to="/requester" replace />} />
+          </Routes>
+        </Suspense>
       </main>
-      {showSiteHelp && <SiteChatWidget />}
+      <SiteChatWidget hidden={!showSiteHelp} />
     </div>
   );
 }

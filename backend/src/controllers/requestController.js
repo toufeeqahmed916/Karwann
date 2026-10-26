@@ -16,7 +16,7 @@ export async function getRequests(req, res, next) {
 
 export async function postRequest(req, res, next) {
   try {
-    const request = await createRequest(req.body);
+    const request = await createRequest(req.body, { ip: req.ip });
     res.status(201).json({ data: request });
   } catch (error) {
     next(error);

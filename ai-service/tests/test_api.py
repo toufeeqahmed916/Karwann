@@ -17,7 +17,7 @@ GOOD = {
     "supplies": [{"item": "water", "qty": 500}],
     "access": "hard",
     "detectedLanguage": "ur",
-    "englishText": "Forty houses near Dadu are flooded.",
+    "englishText": "Forty houses near Dadu are flooded.", "transcript": "",
     "confidence": {"area": 0.95, "people": 0.65, "urgency": 0.8, "vulnerable": 0.9, "supplies": 0.4, "access": 0.3},
 }
 

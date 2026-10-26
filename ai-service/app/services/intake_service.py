@@ -12,6 +12,7 @@ from ..prompts.intake import (
 )
 from .audio import AudioClip
 from .gemini_client import GeminiLike
+from .place_aliases import canonical_place
 from .structured import generate_validated
 
 log = logging.getLogger("karwan-ai")
@@ -25,7 +26,8 @@ def _normalise(result: IntakeResult) -> IntakeResult:
         result.area = None
         result.confidence.area = 0.0
     else:
-        result.area = result.area.strip()
+        # Areas are always saved in English letters, so every screen can show them in any language.
+        result.area = canonical_place(result.area.strip()) or result.area.strip()
     if result.people is None or result.people < 0:
         result.people = None
         result.peopleIsEstimate = False
@@ -42,6 +44,7 @@ def _normalise(result: IntakeResult) -> IntakeResult:
         merged[supply.item] = merged.get(supply.item, 0) + max(0, supply.qty)
     result.supplies = [Supply(item=k, qty=v) for k, v in merged.items()]
     result.vulnerable = list(dict.fromkeys(result.vulnerable))
+    result.transcript = (result.transcript or "").strip()
     if not result.supplies:
         result.confidence.supplies = 0.0
     return IntakeResult.model_validate(result.model_dump())
@@ -75,6 +78,8 @@ async def analyse_report(
             gemini, system=INTAKE_SYSTEM_PROMPT, user=user, schema=IntakeResult, audio=audio_arg
         )
     )
+    if audio is None:
+        result.transcript = ""  # the typed text is already on the page
     if audio is not None and _is_empty(result):
         raise AppError("UNSUPPORTED_AUDIO", UNCLEAR_AUDIO_MESSAGE)
     return result

@@ -9,7 +9,7 @@ from .models import ErrorEnvelope
 INTAKE_EXAMPLE = {
     "area": "Dadu", "people": 240, "peopleIsEstimate": True, "urgency": "high",
     "vulnerable": ["children", "medical"], "supplies": [{"item": "water", "qty": 500}], "access": "hard",
-    "detectedLanguage": "ur", "englishText": "About forty houses near Dadu are flooded.",
+    "detectedLanguage": "ur", "englishText": "About forty houses near Dadu are flooded.", "transcript": "",
     "confidence": {"area": 0.95, "people": 0.65, "urgency": 0.8, "vulnerable": 0.9, "supplies": 0.4, "access": 0.3},
 }
 TRANSCRIBE_EXAMPLE = {"text": "Dadu needs water and medicine.", "detectedLanguage": "ur"}

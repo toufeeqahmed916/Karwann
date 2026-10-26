@@ -5,6 +5,8 @@ import json
 import re
 from typing import Any
 
+from .place_aliases import place_in_text
+
 MAX_CONTEXT_CHARS = 14000
 GENERAL_REQUEST_LIMIT = 15
 GENERAL_ALLOCATION_LIMIT = 40
@@ -57,10 +59,12 @@ def build_context(data: dict[str, Any], question: str) -> tuple[str, set[tuple[s
     dashboard = data.get("dashboard") if isinstance(data.get("dashboard"), dict) else {}
 
     named_areas = {_norm(r.get("area", "")) for r in requests} | {_norm(a.get("area", "")) for a in allocations}
-    mentioned = {a for a in named_areas if a and a in q}
+    # A place counts as mentioned when it appears in English, or in Urdu or Sindhi script (see place_aliases).
+    mentioned = {a for a in named_areas if a and (a in q or place_in_text(a, question))}
     mentioned_depots = {
         d.get("id") for d in depots
         if _norm(d.get("name", "")) in q or _norm(d.get("name", "")).replace(" depot", "") in q
+        or place_in_text(_norm(d.get("name", "")).replace(" depot", ""), question)
     }
 
     if mentioned or mentioned_depots:

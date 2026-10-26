@@ -8,20 +8,20 @@ import RouteLayer from "../components/RouteLayer.jsx";
 import TruckLayer from "../components/TruckLayer.jsx";
 import ScoreBars from "../components/ScoreBars.jsx";
 import StatusBadge from "../components/StatusBadge.jsx";
-import { advanceTime, getCoordinatorOverview, getRoute } from "../lib/api.js";
-import { ITEM_LABEL } from "../lib/constants.js";
+import { getCoordinatorOverview, getRoute } from "../lib/api.js";
 import { subscribeToDeliveryUpdates } from "../lib/realtime.js";
+import { useLang } from "../lib/i18n.jsx";
 
 const LEGEND = [
-  ["#D93636", "Critical"], ["#EF8A1F", "High"], ["#E3C21B", "Waiting"],
-  ["#2F6FDE", "In transit"], ["#2E9D5B", "Delivered"],
+  ["#D93636", "legend.critical"], ["#EF8A1F", "legend.high"], ["#E3C21B", "legend.waiting"],
+  ["#2F6FDE", "legend.transit"], ["#2E9D5B", "legend.delivered"],
 ];
 
 export default function DashboardPage() {
+  const { t, num, place, text, itemName } = useLang();
   const [overview, setOverview] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [skipping, setSkipping] = useState(false);
   const [error, setError] = useState("");
   const [heatLayer, setHeatLayer] = useState("need");
   const [route, setRoute] = useState(null);
@@ -55,21 +55,8 @@ export default function DashboardPage() {
     getRoute(nearest.id, request.id).then(setRoute).catch(() => setRoute(null));
   }, [overview, selectedId]);
 
-  async function skipTime() {
-    setSkipping(true);
-    setError("");
-    try {
-      await advanceTime(6);
-      await load();
-    } catch (requestError) {
-      setError(requestError.message);
-    } finally {
-      setSkipping(false);
-    }
-  }
-
-  if (loading) return <p className="p-6 text-mute">Loading dashboard...</p>;
-  if (!overview) return <p role="alert" className="p-6 text-crit">{error || "Dashboard is unavailable."}</p>;
+  if (loading) return <p className="p-6 text-mute">{t("dash.loading")}</p>;
+  if (!overview) return <p role="alert" className="p-6 text-crit">{error ? text(error) : t("dash.unavailable")}</p>;
 
   const { dashboard, requests, depots } = overview;
   const liveDashboard = {
@@ -84,21 +71,20 @@ export default function DashboardPage() {
       <div className="mx-auto max-w-[1500px]">
         <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-mute">Phase 3 · Operations overview</p>
-            <h1 className="mt-1 text-3xl font-extrabold">Relief dashboard</h1>
-            <p className="mt-1 text-sm text-mute">Monitor needs, shortages and request progress across Sindh.</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-mute">{t("dash.eyebrow")}</p>
+            <h1 className="mt-1 text-3xl font-extrabold">{t("dash.title")}</h1>
+            <p className="mt-1 text-sm text-mute">{t("dash.subtitle")}</p>
           </div>
-          <button className="btn-lime" onClick={skipTime} disabled={skipping}>{skipping ? "Advancing..." : "Skip +6 hours"}</button>
         </div>
 
-        {error && <p role="alert" className="mb-4 rounded-ui border border-crit/20 bg-crit/10 px-4 py-3 text-sm text-crit">{error}</p>}
-        {connection.paused && <p role="alert" className="mb-4 rounded-ui border border-wait bg-wait/10 px-4 py-3 text-sm">Live updates paused. Retrying automatically every 2 seconds.</p>}
+        {error && <p role="alert" className="mb-4 rounded-ui border border-crit/20 bg-crit/10 px-4 py-3 text-sm text-crit">{text(error)}</p>}
+        {connection.paused && <p role="alert" className="mb-4 rounded-ui border border-wait bg-wait/10 px-4 py-3 text-sm">{t("common.livePaused")}</p>}
 
         <div className="mb-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <KpiCard label="Active requests" value={liveDashboard.activeRequests} note="Awaiting full delivery" tone="danger" />
-          <KpiCard label="People awaiting help" value={liveDashboard.peopleAwaiting} note="Across all active areas" />
-          <KpiCard label="Deliveries in progress" value={liveDashboard.deliveriesInProgress} note="Currently on the road" />
-          <KpiCard label="Completed deliveries" value={liveDashboard.completedDeliveries} note="Confirmed arrivals" tone="success" />
+          <KpiCard label={t("dash.kpiActive")} value={liveDashboard.activeRequests} note={t("dash.kpiActiveNote")} tone="danger" />
+          <KpiCard label={t("dash.kpiPeople")} value={liveDashboard.peopleAwaiting} note={t("dash.kpiPeopleNote")} />
+          <KpiCard label={t("dash.kpiProgress")} value={liveDashboard.deliveriesInProgress} note={t("dash.kpiProgressNote")} />
+          <KpiCard label={t("dash.kpiDone")} value={liveDashboard.completedDeliveries} note={t("dash.kpiDoneNote")} tone="success" />
         </div>
 
         <div className="mb-4"><Pipeline requests={requests} /></div>
@@ -107,11 +93,11 @@ export default function DashboardPage() {
           <section className="panel overflow-hidden">
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-4 py-3">
               <div>
-                <h2 className="text-lg font-bold">Affected locations</h2>
-                <p className="text-sm text-mute">Select a marker to inspect the request.</p>
+                <h2 className="text-lg font-bold">{t("dash.locations")}</h2>
+                <p className="text-sm text-mute">{t("dash.locationsHelp")}</p>
               </div>
               <div className="flex flex-wrap gap-3 text-xs">
-                {LEGEND.map(([color, label]) => <span key={label} className="flex items-center gap-1.5"><i className="h-2.5 w-2.5 rounded-full" style={{ background: color }} />{label}</span>)}
+                {LEGEND.map(([color, labelKey]) => <span key={labelKey} className="flex items-center gap-1.5"><i className="h-2.5 w-2.5 rounded-full" style={{ background: color }} />{t(labelKey)}</span>)}
               </div>
             </div>
             <div className="border-b border-line p-3"><LayerSwitch value={heatLayer} onChange={setHeatLayer} /></div>
@@ -129,19 +115,19 @@ export default function DashboardPage() {
               <section className="panel p-5">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-mute">Request detail</p>
-                    <h2 className="mt-1 text-2xl font-bold">{selected.area}</h2>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-mute">{t("dash.detail")}</p>
+                    <h2 className="mt-1 text-2xl font-bold">{place(selected.area)}</h2>
                   </div>
                   <StatusBadge request={selected} />
                 </div>
-                <p className="mt-2 text-sm text-mute">{selected.population.toLocaleString()} people · waiting {selected.hoursWaiting} hours</p>
-                <p className="my-4 text-sm">Priority score <strong>{selected.score.total}/100</strong></p>
+                <p className="mt-2 text-sm text-mute">{t("dash.peopleWaiting", { n: num(selected.population), h: num(selected.hoursWaiting) })}</p>
+                <p className="my-4 text-sm">{t("dash.priorityScore", { score: num(selected.score.total) })}</p>
                 <ScoreBars score={selected.score} />
                 <ul className="mt-4 divide-y divide-line rounded-ui border border-line">
                   {selected.items.map((item) => (
                     <li key={item.item} className="flex justify-between px-3 py-2 text-sm">
-                      <span>{ITEM_LABEL[item.item]}</span>
-                      <strong>{item.qtyAllocated} / {item.qtyNeeded}</strong>
+                      <span>{itemName(item.item)}</span>
+                      <strong dir="ltr">{num(item.qtyAllocated)} / {num(item.qtyNeeded)}</strong>
                     </li>
                   ))}
                 </ul>
@@ -149,23 +135,23 @@ export default function DashboardPage() {
             )}
 
             <section className="panel p-5">
-              <h2 className="text-lg font-bold">Critical shortages</h2>
-              {!dashboard.criticalShortages.length ? <p className="mt-3 text-sm text-mute">No critical shortage detected.</p> : (
+              <h2 className="text-lg font-bold">{t("dash.shortages")}</h2>
+              {!dashboard.criticalShortages.length ? <p className="mt-3 text-sm text-mute">{t("dash.noShortage")}</p> : (
                 <ul className="mt-3 space-y-3">
                   {dashboard.criticalShortages.map((shortage) => (
                     <li key={shortage.item} className="rounded-ui bg-paper p-3 text-sm">
-                      <div className="flex justify-between gap-3"><strong>{ITEM_LABEL[shortage.item]}</strong><span className="font-semibold text-crit">Gap {shortage.gap.toLocaleString()}</span></div>
-                      <p className="mt-1 text-xs text-mute">{shortage.available.toLocaleString()} available · {shortage.needed.toLocaleString()} needed</p>
+                      <div className="flex justify-between gap-3"><strong>{itemName(shortage.item)}</strong><span className="font-semibold text-crit">{t("dash.gap", { n: num(shortage.gap) })}</span></div>
+                      <p className="mt-1 text-xs text-mute">{t("dash.availableNeeded", { a: num(shortage.available), n: num(shortage.needed) })}</p>
                     </li>
                   ))}
                 </ul>
               )}
               {!!dashboard.lowStockAlerts.length && (
                 <div className="mt-4 border-t border-line pt-4">
-                  <h3 className="font-bold">Low-stock alerts</h3>
+                  <h3 className="font-bold">{t("dash.lowStock")}</h3>
                   {dashboard.lowStockAlerts.map((alert) => (
                     <p key={`${alert.depotId}-${alert.item}`} className="mt-2 text-sm text-crit">
-                      {alert.depotName}: {ITEM_LABEL[alert.item]} {alert.qty}/{alert.lowThreshold}
+                      {place(alert.depotName)}: {itemName(alert.item)} <span dir="ltr">{num(alert.qty)}/{num(alert.lowThreshold)}</span>
                     </p>
                   ))}
                 </div>

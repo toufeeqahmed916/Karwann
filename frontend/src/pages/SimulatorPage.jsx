@@ -6,33 +6,28 @@ import {
   applySimulation, deleteSimulationBlock, getCoordinatorOverview, getSimulationBlocks,
   recalculateSimulation, undoSimulation,
 } from "../lib/api.js";
-import { ITEMS, ITEM_LABEL } from "../lib/constants.js";
+import { ITEMS } from "../lib/constants.js";
+import { useLang } from "../lib/i18n.jsx";
 
-const ACTIONS = [
-  ["reduce_stock", "Reduce depot stock"],
-  ["add_stock", "Add depot stock"],
-  ["increase_population", "Increase affected people"],
-  ["add_request", "Add emergency request"],
-  ["change_capacity", "Change depot capacity"],
-  ["block_zone", "Block a road zone"],
-];
+const ACTIONS = ["reduce_stock", "add_stock", "increase_population", "add_request", "change_capacity", "block_zone"];
 
 const DEFAULT_FORM = {
   action: "reduce_stock", depotId: "", item: "water", percent: "50", qty: "800",
-  requestId: "", dailyCapacity: "800", area: "New emergency area", population: "1800",
+  requestId: "", dailyCapacity: "800", area: "", population: "1800",
   urgency: "high", qtyNeeded: "300", radiusKm: "15",
 };
 
 export default function SimulatorPage() {
+  const { t, num, place, text, itemName, urgencyName } = useLang();
   const [overview, setOverview] = useState(null);
   const [blocks, setBlocks] = useState([]);
-  const [form, setForm] = useState(DEFAULT_FORM);
+  const [form, setForm] = useState(() => ({ ...DEFAULT_FORM, area: t("sim.defaultArea") }));
   const [pin, setPin] = useState(null);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
   const [working, setWorking] = useState(false);
   const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
+  const [noticeKey, setNoticeKey] = useState("");
 
   async function load() {
     const [overviewData, blockData] = await Promise.all([getCoordinatorOverview(), getSimulationBlocks()]);
@@ -70,7 +65,7 @@ export default function SimulatorPage() {
   async function recalculate() {
     setWorking(true);
     setError("");
-    setNotice("");
+    setNoticeKey("");
     try {
       setResult(await recalculateSimulation(payload()));
     } catch (requestError) {
@@ -88,7 +83,7 @@ export default function SimulatorPage() {
       await load();
       setResult(null);
       setPin(null);
-      setNotice("Scenario applied to the live demo data.");
+      setNoticeKey("sim.noticeApplied");
     } catch (requestError) {
       setError(requestError.message);
     } finally {
@@ -101,7 +96,7 @@ export default function SimulatorPage() {
     await undoSimulation();
     setResult(null);
     setPin(null);
-    setNotice("Temporary scenario discarded.");
+    setNoticeKey("sim.noticeUndone");
     setWorking(false);
   }
 
@@ -110,101 +105,102 @@ export default function SimulatorPage() {
     setBlocks(await getSimulationBlocks());
   }
 
-  if (loading) return <p className="p-6 text-mute">Loading simulator...</p>;
-  if (!overview) return <p role="alert" className="p-6 text-crit">{error || "Simulator is unavailable."}</p>;
+  if (loading) return <p className="p-6 text-mute">{t("sim.loading")}</p>;
+  if (!overview) return <p role="alert" className="p-6 text-crit">{error ? text(error) : t("sim.unavailable")}</p>;
 
   const { requests, depots } = overview;
+  const changePct = result?.diff.overallChangePct;
 
   return (
     <div className="h-full overflow-y-auto p-4 sm:p-6">
       <div className="mx-auto max-w-[1500px]">
         <div className="mb-5">
-          <p className="text-xs font-semibold uppercase tracking-wider text-mute">Phase 5 · Safe what-if workspace</p>
-          <h1 className="mt-1 text-3xl font-extrabold">Scenario simulator</h1>
-          <p className="mt-1 text-sm text-mute">Preview a single operational change before applying it to the live demo.</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-mute">{t("sim.eyebrow")}</p>
+          <h1 className="mt-1 text-3xl font-extrabold">{t("sim.title")}</h1>
+          <p className="mt-1 text-sm text-mute">{t("sim.subtitle")}</p>
         </div>
 
-        {error && <p role="alert" className="mb-4 rounded-ui border border-crit/20 bg-crit/10 px-4 py-3 text-sm text-crit">{error}</p>}
-        {notice && <p role="status" className="mb-4 rounded-ui border border-done/20 bg-done/10 px-4 py-3 text-sm text-done">{notice}</p>}
+        {error && <p role="alert" className="mb-4 rounded-ui border border-crit/20 bg-crit/10 px-4 py-3 text-sm text-crit">{text(error)}</p>}
+        {noticeKey && <p role="status" className="mb-4 rounded-ui border border-done/20 bg-done/10 px-4 py-3 text-sm text-done">{t(noticeKey)}</p>}
 
         <div className="grid items-start gap-4 xl:grid-cols-[410px_minmax(0,1fr)]">
           <section className="panel p-5">
-            <label className="label" htmlFor="sim-action">What should change?</label>
+            <label className="label" htmlFor="sim-action">{t("sim.whatChange")}</label>
             <select id="sim-action" className="field" value={form.action} onChange={(event) => { set("action", event.target.value); setResult(null); setPin(null); }}>
-              {ACTIONS.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+              {ACTIONS.map((value) => <option key={value} value={value}>{t(`sim.action.${value}`)}</option>)}
             </select>
 
             <div className="mt-4 space-y-4">
               {["reduce_stock", "add_stock", "change_capacity"].includes(form.action) && (
-                <label className="text-sm">Depot
+                <label className="text-sm">{t("sim.depot")}
                   <select className="field mt-1" value={form.depotId} onChange={(event) => set("depotId", event.target.value)}>
-                    {depots.map((depot) => <option key={depot.id} value={depot.id}>{depot.name}</option>)}
+                    {depots.map((depot) => <option key={depot.id} value={depot.id}>{place(depot.name)}</option>)}
                   </select>
                 </label>
               )}
               {["reduce_stock", "add_stock", "add_request"].includes(form.action) && (
-                <label className="text-sm">Supply
+                <label className="text-sm">{t("sim.supply")}
                   <select className="field mt-1" value={form.item} onChange={(event) => set("item", event.target.value)}>
-                    {ITEMS.map((item) => <option key={item} value={item}>{ITEM_LABEL[item]}</option>)}
+                    {ITEMS.map((item) => <option key={item} value={item}>{itemName(item)}</option>)}
                   </select>
                 </label>
               )}
               {form.action === "increase_population" && (
-                <label className="text-sm">Request
+                <label className="text-sm">{t("sim.request")}
                   <select className="field mt-1" value={form.requestId} onChange={(event) => set("requestId", event.target.value)}>
-                    {requests.map((request) => <option key={request.id} value={request.id}>{request.area}</option>)}
+                    {requests.map((request) => <option key={request.id} value={request.id}>{place(request.area)}</option>)}
                   </select>
                 </label>
               )}
               {["reduce_stock", "increase_population"].includes(form.action) && (
-                <label className="text-sm">Percentage
+                <label className="text-sm">{t("sim.percentage")}
                   <input className="field mt-1" type="number" min="1" max="100" value={form.percent} onChange={(event) => set("percent", event.target.value)} />
                 </label>
               )}
               {form.action === "add_stock" && (
-                <label className="text-sm">Units to add
+                <label className="text-sm">{t("sim.unitsToAdd")}
                   <input className="field mt-1" type="number" min="1" value={form.qty} onChange={(event) => set("qty", event.target.value)} />
                 </label>
               )}
               {form.action === "change_capacity" && (
-                <label className="text-sm">New daily capacity
+                <label className="text-sm">{t("sim.newCapacity")}
                   <input className="field mt-1" type="number" min="0" value={form.dailyCapacity} onChange={(event) => set("dailyCapacity", event.target.value)} />
                 </label>
               )}
               {form.action === "add_request" && (
                 <>
-                  <label className="text-sm">Area name<input className="field mt-1" value={form.area} onChange={(event) => set("area", event.target.value)} /></label>
+                  <label className="text-sm">{t("sim.areaName")}<input className="field mt-1" value={form.area} onChange={(event) => set("area", event.target.value)} /></label>
                   <div className="grid grid-cols-2 gap-3">
-                    <label className="text-sm">People affected<input className="field mt-1" type="number" min="1" value={form.population} onChange={(event) => set("population", event.target.value)} /></label>
-                    <label className="text-sm">Units needed<input className="field mt-1" type="number" min="1" value={form.qtyNeeded} onChange={(event) => set("qtyNeeded", event.target.value)} /></label>
+                    <label className="text-sm">{t("sim.peopleAffected")}<input className="field mt-1" type="number" min="1" value={form.population} onChange={(event) => set("population", event.target.value)} /></label>
+                    <label className="text-sm">{t("sim.unitsNeeded")}<input className="field mt-1" type="number" min="1" value={form.qtyNeeded} onChange={(event) => set("qtyNeeded", event.target.value)} /></label>
                   </div>
-                  <label className="text-sm">Urgency
+                  <label className="text-sm">{t("sim.urgency")}
                     <select className="field mt-1" value={form.urgency} onChange={(event) => set("urgency", event.target.value)}>
-                      {['low', 'medium', 'high', 'critical'].map((urgency) => <option key={urgency}>{urgency}</option>)}
+                      {["low", "medium", "high", "critical"].map((urgency) => <option key={urgency} value={urgency}>{urgencyName(urgency)}</option>)}
                     </select>
                   </label>
                 </>
               )}
               {form.action === "block_zone" && (
                 <>
-                  <label className="text-sm">Radius in kilometres<input className="field mt-1" type="number" min="1" value={form.radiusKm} onChange={(event) => set("radiusKm", event.target.value)} /></label>
+                  <label className="text-sm">{t("sim.radius")}<input className="field mt-1" type="number" min="1" value={form.radiusKm} onChange={(event) => set("radiusKm", event.target.value)} /></label>
                   <p className={`rounded-ui p-3 text-sm ${pin ? "bg-lime/30" : "bg-paper text-mute"}`}>
-                    {pin ? `Blocked-zone centre: ${pin.lat}, ${pin.lng}` : "Click the map to place the blocked zone."}
+                    {pin ? <>{t("sim.zoneCentre")} <span dir="ltr">{pin.lat}, {pin.lng}</span></> : t("sim.zoneHint")}
                   </p>
                 </>
               )}
             </div>
 
-            <button className="btn-primary mt-5 w-full" onClick={recalculate} disabled={working}>{working ? "Recalculating..." : "Recalculate allocation"}</button>
+            <button className="btn-primary mt-5 w-full" onClick={recalculate} disabled={working}>{working ? t("sim.recalculating") : t("sim.recalculate")}</button>
 
             {!!blocks.length && (
               <div className="mt-5 border-t border-line pt-4">
-                <h2 className="font-bold">Active blocked zones</h2>
+                <h2 className="font-bold">{t("sim.activeZones")}</h2>
                 <ul className="mt-2 space-y-2">
                   {blocks.map((block) => (
                     <li key={block.id} className="flex items-center justify-between rounded-ui bg-paper px-3 py-2 text-sm">
-                      <span>{block.radiusKm} km · {block.lat.toFixed(2)}, {block.lng.toFixed(2)}</span>
-                      <button type="button" className="font-semibold text-crit" onClick={() => removeBlock(block.id)}>Remove</button>
+                      <span>{t("common.kmValue", { n: num(block.radiusKm) })} · <span dir="ltr">{block.lat.toFixed(2)}, {block.lng.toFixed(2)}</span></span>
+                      <button type="button" className="font-semibold text-crit" onClick={() => removeBlock(block.id)}>{t("common.remove")}</button>
                     </li>
                   ))}
                 </ul>
@@ -214,8 +210,8 @@ export default function SimulatorPage() {
 
           <section className="panel overflow-hidden">
             <div className="border-b border-line px-4 py-3">
-              <h2 className="font-bold">Scenario map</h2>
-              <p className="text-sm text-mute">Road blocks are shown as red zones. Map clicking is active only for Block a road zone.</p>
+              <h2 className="font-bold">{t("sim.mapTitle")}</h2>
+              <p className="text-sm text-mute">{t("sim.mapHelp")}</p>
             </div>
             <div className="h-[560px]">
               <MapView requests={requests} depots={depots} pin={form.action === "block_zone" ? pin : null}
@@ -234,19 +230,19 @@ export default function SimulatorPage() {
             <section className="panel p-5">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-mute">Before and after</p>
-                  <h2 className="mt-1 text-xl font-bold">Allocation impact</h2>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-mute">{t("sim.beforeAfter")}</p>
+                  <h2 className="mt-1 text-xl font-bold">{t("sim.impact")}</h2>
                 </div>
                 <div className="flex gap-2">
-                  <button className="btn-ghost" onClick={undo} disabled={working}>Undo</button>
-                  <button className="btn-lime" onClick={apply} disabled={working}>Apply scenario</button>
+                  <button className="btn-ghost" onClick={undo} disabled={working}>{t("sim.undo")}</button>
+                  <button className="btn-lime" onClick={apply} disabled={working}>{t("sim.apply")}</button>
                 </div>
               </div>
               <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                <div className="rounded-panel bg-paper p-4"><p className="text-sm text-mute">Before</p><strong className="mt-1 block text-3xl">{result.before.summary.overallFulfilmentPct}%</strong></div>
-                <div className="rounded-panel bg-paper p-4"><p className="text-sm text-mute">After</p><strong className="mt-1 block text-3xl">{result.after.summary.overallFulfilmentPct}%</strong></div>
-                <div className={`rounded-panel p-4 ${result.diff.overallChangePct < 0 ? "bg-crit/10 text-crit" : "bg-done/10 text-done"}`}>
-                  <p className="text-sm">Overall change</p><strong className="mt-1 block text-3xl">{result.diff.overallChangePct > 0 ? "+" : ""}{result.diff.overallChangePct}%</strong>
+                <div className="rounded-panel bg-paper p-4"><p className="text-sm text-mute">{t("sim.before")}</p><strong className="mt-1 block text-3xl" dir="ltr">{result.before.summary.overallFulfilmentPct}%</strong></div>
+                <div className="rounded-panel bg-paper p-4"><p className="text-sm text-mute">{t("sim.after")}</p><strong className="mt-1 block text-3xl" dir="ltr">{result.after.summary.overallFulfilmentPct}%</strong></div>
+                <div className={`rounded-panel p-4 ${changePct < 0 ? "bg-crit/10 text-crit" : "bg-done/10 text-done"}`}>
+                  <p className="text-sm">{t("sim.overallChange")}</p><strong className="mt-1 block text-3xl" dir="ltr">{changePct > 0 ? "+" : ""}{changePct}%</strong>
                 </div>
               </div>
             </section>

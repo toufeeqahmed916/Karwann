@@ -8,6 +8,7 @@ import {
 
 const validRequest = {
   area: "Thatta",
+  complaintText: "Flood water has entered several homes.",
   lat: 24.75,
   lng: 67.92,
   population: 1500,
@@ -28,6 +29,7 @@ describe("request validation", () => {
   });
 
   it.each([
+    ["short complaint text", { complaintText: "Too short" }, "complaintText must contain between 10 and 2000 characters"],
     ["invalid population", { population: 0 }, "population must be a positive integer"],
     ["invalid latitude", { lat: 91 }, "lat must be between -90 and 90"],
     ["invalid urgency", { urgency: "urgent" }, "urgency must be one of"],

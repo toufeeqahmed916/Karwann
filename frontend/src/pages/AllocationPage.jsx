@@ -6,16 +6,21 @@ import RouteLayer from "../components/RouteLayer.jsx";
 import {
   approveAllocation, generateAllocation, getAllocation, getCoordinatorOverview, getRoute,
 } from "../lib/api.js";
+import { useLang } from "../lib/i18n.jsx";
 
 export default function AllocationPage() {
+  const { t, num, place, text, itemName } = useLang();
   const [plan, setPlan] = useState(null);
   const [overview, setOverview] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [working, setWorking] = useState(false);
-  const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
+  // Messages are stored as { key, params } or { message } so they re-translate if the language changes.
+  const [error, setError] = useState(null);
+  const [notice, setNotice] = useState(null);
   const [route, setRoute] = useState(null);
+
+  const showMessage = (entry) => (entry.key ? t(entry.key, entry.params) : text(entry.message));
 
   useEffect(() => {
     Promise.all([getCoordinatorOverview(), getAllocation()])
@@ -26,7 +31,7 @@ export default function AllocationPage() {
           setSelectedId(savedRows[0].requestId);
         }
       })
-      .catch((requestError) => setError(requestError.message))
+      .catch((requestError) => setError({ message: requestError.message }))
       .finally(() => setLoading(false));
   }, []);
 
@@ -41,14 +46,14 @@ export default function AllocationPage() {
 
   async function generate() {
     setWorking(true);
-    setError("");
-    setNotice("");
+    setError(null);
+    setNotice(null);
     try {
       const result = await generateAllocation();
       setPlan(result);
       setSelectedId(result.rows[0]?.requestId ?? null);
     } catch (requestError) {
-      setError(requestError.message);
+      setError({ message: requestError.message });
     } finally {
       setWorking(false);
     }
@@ -56,8 +61,8 @@ export default function AllocationPage() {
 
   async function approve(body = { all: true }, requestId = null) {
     setWorking(true);
-    setError("");
-    setNotice("");
+    setError(null);
+    setNotice(null);
     try {
       const result = await approveAllocation(body);
       setPlan((current) => ({
@@ -67,19 +72,19 @@ export default function AllocationPage() {
         )),
       }));
       setNotice(requestId
-        ? `Request approved with ${result.approved} supply allocations. Stock was reduced and one truck was assigned per depot allocation.`
-        : `${result.approved} allocation rows approved. Stock, trucks and request statuses were updated.`);
+        ? { key: "alloc.noticeOne", params: { n: num(result.approved) } }
+        : { key: "alloc.noticeAll", params: { n: num(result.approved) } });
       setOverview(await getCoordinatorOverview());
     } catch (requestError) {
       setError(requestError.code === "INSUFFICIENT_STOCK"
-        ? "Inventory changed after generation. Regenerate the plan before approving."
-        : requestError.message);
+        ? { key: "alloc.errStockChanged" }
+        : { message: requestError.message });
     } finally {
       setWorking(false);
     }
   }
 
-  if (loading) return <p className="p-6 text-mute">Loading allocation workspace...</p>;
+  if (loading) return <p className="p-6 text-mute">{t("alloc.loading")}</p>;
 
   const selectedRows = plan?.rows.filter((row) => row.requestId === selectedId) ?? [];
   const selected = selectedRows.find((row) => row.depotId) ?? selectedRows[0];
@@ -106,36 +111,36 @@ export default function AllocationPage() {
       <div className="mx-auto max-w-[1500px]">
         <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-mute">Phase 4 · Recommendation workspace</p>
-            <h1 className="mt-1 text-3xl font-extrabold">Resource allocation</h1>
-            <p className="mt-1 text-sm text-mute">Generate, inspect and approve a transparent supply plan.</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-mute">{t("alloc.eyebrow")}</p>
+            <h1 className="mt-1 text-3xl font-extrabold">{t("alloc.title")}</h1>
+            <p className="mt-1 text-sm text-mute">{t("alloc.subtitle")}</p>
           </div>
           <div className="flex gap-2">
-            <button className="btn-ghost" onClick={generate} disabled={working}>{plan ? "Regenerate" : "Generate allocation"}</button>
-            <button className="btn-lime" onClick={() => approve()} disabled={working || !hasPendingRows}>{working ? "Working..." : hasPendingRows ? "Approve all" : "Approved"}</button>
+            <button className="btn-ghost" onClick={generate} disabled={working}>{plan ? t("alloc.regenerate") : t("alloc.generate")}</button>
+            <button className="btn-lime" onClick={() => approve()} disabled={working || !hasPendingRows}>{working ? t("common.working") : hasPendingRows ? t("alloc.approveAll") : t("alloc.approved")}</button>
           </div>
         </div>
 
-        {working && <p role="status" className="mb-4 rounded-ui border border-line bg-card px-4 py-3 text-sm text-mute">Working on it. Saving to the database can take a few seconds, please keep this page open.</p>}
-        {error && <p role="alert" className="mb-4 rounded-ui border border-crit/20 bg-crit/10 px-4 py-3 text-sm text-crit">{error}</p>}
-        {notice && <p role="status" className="mb-4 rounded-ui border border-done/20 bg-done/10 px-4 py-3 text-sm text-done">{notice}</p>}
+        {error && <p role="alert" className="mb-4 rounded-ui border border-crit/20 bg-crit/10 px-4 py-3 text-sm text-crit">{showMessage(error)}</p>}
+        {notice && <p role="status" className="mb-4 rounded-ui border border-done/20 bg-done/10 px-4 py-3 text-sm text-done">{showMessage(notice)}</p>}
+        {working && <p role="status" className="mb-4 rounded-ui border border-line bg-card px-4 py-3 text-sm text-mute">{t("alloc.workingNotice")}</p>}
 
         {!plan ? (
           <section className="panel flex min-h-[360px] flex-col items-center justify-center p-8 text-center">
             <span className="flex h-14 w-14 items-center justify-center rounded-full bg-lime text-2xl font-extrabold">↗</span>
-            <h2 className="mt-4 text-2xl font-bold">Ready to build a relief plan</h2>
-            <p className="mt-2 max-w-lg text-sm text-mute">The optimizer considers priority, stock, depot capacity, vehicles and distance without changing inventory until approval.</p>
-            <button className="btn-primary mt-5" onClick={generate} disabled={working}>{working ? "Generating..." : "Generate allocation"}</button>
+            <h2 className="mt-4 text-2xl font-bold">{t("alloc.readyTitle")}</h2>
+            <p className="mt-2 max-w-lg text-sm text-mute">{t("alloc.readyBody")}</p>
+            <button className="btn-primary mt-5" onClick={generate} disabled={working}>{working ? t("alloc.generating") : t("alloc.generate")}</button>
           </section>
         ) : (
           <>
             {plan.summary && (
               <div className="mb-4 grid gap-4 xl:grid-cols-[1fr_420px]">
                 <section className="panel grid grid-cols-2 gap-3 p-5 sm:grid-cols-4">
-                  <div><p className="text-sm text-mute">Overall fulfilment</p><strong className="mt-1 block text-3xl">{plan.summary.overallFulfilmentPct}%</strong></div>
-                  <div><p className="text-sm text-mute">Critical fulfilment</p><strong className="mt-1 block text-3xl">{plan.summary.criticalFulfilmentPct}%</strong></div>
-                  <div><p className="text-sm text-mute">Allocated units</p><strong className="mt-1 block text-3xl">{plan.summary.totalAllocated.toLocaleString()}</strong></div>
-                  <div><p className="text-sm text-mute">Needed units</p><strong className="mt-1 block text-3xl">{plan.summary.totalNeeded.toLocaleString()}</strong></div>
+                  <div><p className="text-sm text-mute">{t("alloc.overall")}</p><strong className="mt-1 block text-3xl" dir="ltr">{plan.summary.overallFulfilmentPct}%</strong></div>
+                  <div><p className="text-sm text-mute">{t("alloc.criticalFulfilment")}</p><strong className="mt-1 block text-3xl" dir="ltr">{plan.summary.criticalFulfilmentPct}%</strong></div>
+                  <div><p className="text-sm text-mute">{t("alloc.allocatedUnits")}</p><strong className="mt-1 block text-3xl">{num(plan.summary.totalAllocated)}</strong></div>
+                  <div><p className="text-sm text-mute">{t("alloc.neededUnits")}</p><strong className="mt-1 block text-3xl">{num(plan.summary.totalNeeded)}</strong></div>
                 </section>
                 <BaselineCard summary={plan.summary} baseline={plan.baseline} />
               </div>
@@ -143,8 +148,8 @@ export default function AllocationPage() {
 
             <section className="panel mb-4 overflow-hidden">
               <div className="border-b border-line px-5 py-4">
-                <h2 className="text-lg font-bold">Recommended allocations</h2>
-                <p className="mt-1 text-sm text-mute">Each request appears once. Click it to inspect its supplies, trucks and estimated route.</p>
+                <h2 className="text-lg font-bold">{t("alloc.recommended")}</h2>
+                <p className="mt-1 text-sm text-mute">{t("alloc.recommendedHelp")}</p>
               </div>
               <AllocationTable rows={plan.rows} selectedId={selectedId} onSelect={setSelectedId} />
             </section>
@@ -152,22 +157,22 @@ export default function AllocationPage() {
             {selected && (
               <div className="grid gap-4 lg:grid-cols-[380px_1fr]">
                 <section className="panel p-5">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-mute">Why this recommendation</p>
-                  <h2 className="mt-1 text-xl font-bold">{selected.area}</h2>
-                  <p className="mt-1 text-sm text-mute">{selectedDepots.join(", ")}</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-mute">{t("alloc.why")}</p>
+                  <h2 className="mt-1 text-xl font-bold">{place(selected.area)}</h2>
+                  <p className="mt-1 text-sm text-mute">{selectedDepots.map((name) => (name === "No depot available" ? t("alloc.noDepot") : place(name))).join(t("common.listSeparator"))}</p>
                   <div className="mt-4 space-y-2">
                     {selectedItems.map((item) => (
                       <div key={item.item} className="flex justify-between gap-3 rounded-ui border border-line bg-paper px-3 py-2 text-sm">
-                        <span className="capitalize">{item.item}</span>
-                        <strong>{item.qty.toLocaleString()} of {item.qtyNeeded.toLocaleString()}</strong>
+                        <span>{itemName(item.item)}</span>
+                        <strong>{t("requests.ofTotal", { a: num(item.qty), n: num(item.qtyNeeded) })}</strong>
                       </div>
                     ))}
                   </div>
                   <dl className="mt-4 grid grid-cols-2 gap-3 rounded-panel bg-paper p-4 text-sm">
-                    <div><dt className="text-mute">Truck</dt><dd className="font-semibold">{selectedVehicles.join(", ") || "Not assigned"}</dd></div>
-                    <div><dt className="text-mute">Remaining need</dt><dd className="font-semibold">{Math.max(0, selectedNeeded - selectedAllocated).toLocaleString()} units</dd></div>
-                    <div><dt className="text-mute">Distance</dt><dd className="font-semibold">{selected.distanceKm == null ? "Unavailable" : `${selected.distanceKm} km`}</dd></div>
-                    <div><dt className="text-mute">ETA</dt><dd className="font-semibold">{selected.etaMin == null ? "Unavailable" : `${selected.etaMin} min`}</dd></div>
+                    <div><dt className="text-mute">{t("alloc.truck")}</dt><dd className="font-semibold">{selectedVehicles.map(place).join(t("common.listSeparator")) || t("allocTable.notAssigned")}</dd></div>
+                    <div><dt className="text-mute">{t("alloc.remainingNeed")}</dt><dd className="font-semibold">{t("common.unitsValue", { n: num(Math.max(0, selectedNeeded - selectedAllocated)) })}</dd></div>
+                    <div><dt className="text-mute">{t("alloc.distance")}</dt><dd className="font-semibold">{selected.distanceKm == null ? t("common.unavailable") : t("common.kmValue", { n: num(selected.distanceKm) })}</dd></div>
+                    <div><dt className="text-mute">{t("alloc.eta")}</dt><dd className="font-semibold">{selected.etaMin == null ? t("common.unavailable") : t("common.minValue", { n: num(selected.etaMin) })}</dd></div>
                   </dl>
                   <button
                     type="button"
@@ -175,13 +180,13 @@ export default function AllocationPage() {
                     onClick={() => approve({ requestId: selected.requestId }, selected.requestId)}
                     disabled={working || !selectedRequestPending}
                   >
-                    {working ? "Approving..." : selectedRequestPending ? "Approve this request" : "Request approved"}
+                    {working ? t("alloc.approving") : selectedRequestPending ? t("alloc.approveThis") : t("alloc.requestApproved")}
                   </button>
                 </section>
                 <section className="panel overflow-hidden">
                   <div className="border-b border-line px-4 py-3">
-                    <h2 className="font-bold">Route preview</h2>
-                    <p className="text-xs text-mute">Dashed lines indicate the estimated-route fallback.</p>
+                    <h2 className="font-bold">{t("alloc.routePreview")}</h2>
+                    <p className="text-xs text-mute">{t("alloc.routeHelp")}</p>
                   </div>
                   <div className="h-[340px]">
                     <MapView requests={request ? [request] : []} depots={depot ? [depot] : []} selectedId={request?.id}>

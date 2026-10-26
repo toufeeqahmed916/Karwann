@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, Fragment } from "react";
 import "../Karwan.css";
 import { translations } from "../mocks/karwanTranslations.js"; // adjust the path to where you put the file
 import BrandLogo from "../components/BrandLogo.jsx";
+import LanguageToggle from "../components/LanguageToggle.jsx";
 import { useLanguage } from "../lib/i18n.jsx";
 
 const heroImages = [
@@ -82,7 +83,6 @@ const flowIcons = [
 
 const URGENCY_KEYS = ["Critical", "High", "Medium", "Low"];
 const NEED_KEYS = ["Water", "Food", "Medicine", "Shelter kits"];
-const LANG_KEY = "karwan-lang";
 
 /**
  * Karwan landing page.
@@ -96,31 +96,10 @@ export default function Karwan({ onSubmitRequest, demoButton = null }) {
   const areaRef = useRef(null);
   const toastTimer = useRef(null);
 
-  /* ---------- language (remembered between visits) ---------- */
-  const [lang, setLang] = useState(() => {
-    try {
-      const saved = localStorage.getItem(LANG_KEY);
-      return saved === "ur" ? "ur" : "en";
-    } catch {
-      return "en";
-    }
-  });
-  const t = translations[lang];
-  const { setLang: setAppLang } = useLanguage();
-  useEffect(() => {
-    setAppLang(lang);
-  }, [lang, setAppLang]); // keep the app-wide language in step with the landing toggle
-  const isUr = lang === "ur";
-
-  const toggleLang = () => setLang((l) => (l === "en" ? "ur" : "en"));
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(LANG_KEY, lang);
-    } catch {
-      /* ignore */
-    }
-  }, [lang]);
+  /* ---------- language: one shared choice (English / Urdu / Sindhi), remembered between visits ---------- */
+  const { lang } = useLanguage();
+  const t = translations[lang] ?? translations.en;
+  const isUr = lang !== "en"; // right-to-left layout (Urdu and Sindhi)
 
   const [scrolled, setScrolled] = useState(false);
   const [current, setCurrent] = useState(0);
@@ -277,13 +256,7 @@ export default function Karwan({ onSubmitRequest, demoButton = null }) {
           <a href="#simulator">{t.nav.demo}</a>
         </nav>
         <div className="navactions">
-          <button
-            className="pill outline urdu"
-            onClick={toggleLang}
-            aria-label={t.langButtonLabel}
-          >
-            {t.langButton}
-          </button>
+          <LanguageToggle unstyled className="pill outline urdu langMenu" />
           <button className="pill dark" onClick={handleSubmitRequest}>
             {t.submit} <span>↗</span>
           </button>
@@ -312,13 +285,7 @@ export default function Karwan({ onSubmitRequest, demoButton = null }) {
                 text={t.brand}
               />
             </a>
-            <button
-              className="pill outline urdu"
-              onClick={toggleLang}
-              aria-label={t.langButtonLabel}
-            >
-              {t.langButton}
-            </button>
+            <LanguageToggle unstyled className="pill outline urdu langMenu" />
           </div>
           <div className="heroSlides">
             {heroImages.map((img, i) => (

@@ -4,6 +4,34 @@ Understands reports and explains data. It never saves requests, scores, allocate
 
 Status: `/health`, text + voice `/intake`, `/transcribe` and `/chat` are done.
 
+## Languages: English, Urdu and Sindhi
+
+Every AI endpoint understands and answers in **English (`en`), Urdu (`ur`) and Sindhi (`sd`)**. `uiLanguage` / `ui_language` /
+`target_language` accept those three codes, and `detectedLanguage` can be `sd`. Sindhi is handled as its own language, not as Urdu.
+
+| Endpoint | What it does in all three languages |
+|---|---|
+| `POST /intake` | Reads a typed or spoken report and fills the request fields (also Roman Urdu / Roman Sindhi) |
+| `POST /transcribe` | Voice to text, optionally translated to `target_language` |
+| `POST /chat` | Staff assistant. Questions may name places in English, Urdu or Sindhi script (`app/services/place_aliases.py`) |
+| `POST /site-chat` | Website help bot |
+| `POST /translate` | Translates a short text (an answer or a report summary) between the three languages, so answers on screen follow a language switch |
+| `POST /speak` | **Reads text aloud** and returns a WAV (24 kHz, mono). Used by the Listen buttons and "speak answers automatically" |
+
+`/speak` uses Gemini speech (`GEMINI_TTS_MODEL`, default `gemini-3.8-flash-tts`; voice `GEMINI_TTS_VOICE`, default `Kore`). If that model is slow or down
+the service answers with `GEMINI_TTS_FALLBACK_MODEL` (default `gemini-3.1-flash-tts-preview`; set it empty to turn the fallback off)
+and uses the fallback first for the next five minutes. Time limits: `AI_TTS_TIMEOUT_SECONDS` (30) and `AI_TTS_FALLBACK_TIMEOUT_SECONDS` (45).
+It has the same two-key fail-over as the other endpoints, caches the last 64 recordings, and accepts up to 1,200 characters.
+Check the free-tier limits of the TTS model in Google AI Studio before the demo.
+
+Try it with your real key (writes `karwan_sindhi.wav` and `karwan_urdu.wav` to your temp folder so you can listen):
+
+```bash
+.venv/Scripts/python scripts/try_sindhi.py
+```
+
+The Sindhi wording in prompts and refusals should be reviewed by a native Sindhi speaker.
+
 ## Run locally (Windows, Git Bash)
 
 ```bash

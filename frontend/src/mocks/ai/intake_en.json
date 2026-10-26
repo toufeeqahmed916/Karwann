@@ -3,10 +3,26 @@
   "people": 240,
   "peopleIsEstimate": true,
   "urgency": "high",
-  "vulnerable": ["children", "medical"],
-  "supplies": [{ "item": "water", "qty": 500 }],
+  "vulnerable": [
+    "children",
+    "medical"
+  ],
+  "supplies": [
+    {
+      "item": "water",
+      "qty": 500
+    }
+  ],
   "access": "hard",
   "detectedLanguage": "en",
   "englishText": "About 40 houses near Dadu are flooded. Roads are cut off. We need water and medicine.",
-  "confidence": { "area": 0.95, "people": 0.65, "urgency": 0.8, "vulnerable": 0.9, "supplies": 0.4, "access": 0.3 }
+  "transcript": "",
+  "confidence": {
+    "area": 0.95,
+    "people": 0.65,
+    "urgency": 0.8,
+    "vulnerable": 0.9,
+    "supplies": 0.4,
+    "access": 0.3
+  }
 }

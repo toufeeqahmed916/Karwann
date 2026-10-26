@@ -2,7 +2,6 @@ import "dotenv/config";
 
 const REQUIRED_VARIABLES = [
   "SUPABASE_URL",
-  "SUPABASE_PUBLISHABLE_KEY",
   "SUPABASE_SECRET_KEY",
   "SUPABASE_JWKS_URL",
 ];
@@ -47,7 +46,6 @@ export const env = Object.freeze({
     .map((origin) => origin.trim().replace(/\/+$/, ""))
     .filter(Boolean),
   supabaseUrl: parseUrl("SUPABASE_URL", process.env.SUPABASE_URL),
-  supabasePublishableKey: process.env.SUPABASE_PUBLISHABLE_KEY.trim(),
   supabaseSecretKey: process.env.SUPABASE_SECRET_KEY.trim(),
   supabaseJwksUrl: parseUrl("SUPABASE_JWKS_URL", process.env.SUPABASE_JWKS_URL),
 });

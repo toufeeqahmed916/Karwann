@@ -1,16 +1,24 @@
-import { useLanguage } from "../lib/i18n.jsx";
+import { LANGUAGES, useLanguage } from "../lib/i18n.jsx";
 
-/** Switches the whole app between English and Urdu. */
-export default function LanguageToggle() {
+/**
+ * Language menu: English, Urdu (اردو) or Sindhi (سنڌي). Choosing one switches the whole app,
+ * including the AI assistant (it then understands, answers and speaks that language).
+ * Each option is written in its own language so people can always find theirs.
+ */
+export default function LanguageToggle({ className = "", unstyled = false }) {
   const { lang, setLang, t } = useLanguage();
   return (
-    <div className="flex shrink-0 gap-1" role="group" aria-label={t("lang.toggleLabel")}>
-      {["en", "ur"].map((code) => (
-        <button key={code} type="button" aria-pressed={lang === code} onClick={() => setLang(code)} lang={code}
-          className={`btn px-3 py-1.5 text-xs border ${lang === code ? "bg-ink text-white border-ink" : "bg-card border-line"}`}>
-          {t(`lang.${code}`)}
-        </button>
+    <select
+      value={lang}
+      onChange={(event) => setLang(event.target.value)}
+      aria-label={t("lang.toggleLabel")}
+      className={unstyled
+        ? `language-toggle ${className}`
+        : `language-toggle field w-auto min-w-[116px] shrink-0 rounded-full py-2 ps-3 pe-9 text-sm font-semibold shadow-sm ${className}`}
+    >
+      {LANGUAGES.map((language) => (
+        <option key={language.code} value={language.code} lang={language.code}>{language.label}</option>
       ))}
-    </div>
+    </select>
   );
 }

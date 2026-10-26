@@ -4,9 +4,10 @@ import RouteLayer from "../components/RouteLayer.jsx";
 import TruckLayer from "../components/TruckLayer.jsx";
 import { completeDelivery, getCoordinatorOverview, getDeliveries, startDeliveries } from "../lib/api.js";
 import { subscribeToDeliveryUpdates } from "../lib/realtime.js";
-import { ITEM_LABEL } from "../lib/constants.js";
+import { useLang } from "../lib/i18n.jsx";
 
 export default function DriverPage() {
+  const { t, num, place, text, itemName, statusName } = useLang();
   const [overview, setOverview] = useState(null);
   const [deliveries, setDeliveries] = useState([]);
   const [deliveryId, setDeliveryId] = useState("");
@@ -85,70 +86,70 @@ export default function DriverPage() {
     }
   }
 
-  if (loading) return <p className="p-6 text-mute">Loading assigned delivery...</p>;
+  if (loading) return <p className="p-6 text-mute">{t("driver.loading")}</p>;
 
   return (
     <div className="h-full overflow-y-auto p-4 sm:p-6">
       <div className="mx-auto max-w-6xl">
         <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-mute">Phase 7 · Driver operations</p>
-            <h1 className="mt-1 text-3xl font-extrabold">Delivery run</h1>
-            <p className="mt-1 text-sm text-mute">Follow the route, update the trip and confirm arrival.</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-mute">{t("driver.eyebrow")}</p>
+            <h1 className="mt-1 text-3xl font-extrabold">{t("driver.title")}</h1>
+            <p className="mt-1 text-sm text-mute">{t("driver.subtitle")}</p>
           </div>
           {!!orderedDeliveries.length && (
-            <label className="text-sm">Assigned delivery
+            <label className="text-sm">{t("driver.assigned")}
               <select className="field mt-1 min-w-56" value={delivery?.allocationId ?? ""} onChange={(event) => setDeliveryId(event.target.value)}>
-                {orderedDeliveries.map((entry) => <option key={entry.allocationId} value={entry.allocationId}>{entry.area} · {entry.vehicleId} · {entry.status.replace("_", " ")}</option>)}
+                {orderedDeliveries.map((entry) => <option key={entry.allocationId} value={entry.allocationId}>{place(entry.area)} · {place(entry.vehicleId)} · {statusName(entry.status)}</option>)}
               </select>
             </label>
           )}
         </div>
 
-        {connection.paused && <p role="alert" className="mb-4 rounded-ui border border-wait bg-wait/10 px-4 py-3 text-sm">Live updates paused. Retrying automatically every 2 seconds.</p>}
-        {error && <p role="alert" className="mb-4 rounded-ui border border-crit/20 bg-crit/10 px-4 py-3 text-sm text-crit">{error}</p>}
+        {connection.paused && <p role="alert" className="mb-4 rounded-ui border border-wait bg-wait/10 px-4 py-3 text-sm">{t("common.livePaused")}</p>}
+        {error && <p role="alert" className="mb-4 rounded-ui border border-crit/20 bg-crit/10 px-4 py-3 text-sm text-crit">{text(error)}</p>}
 
         {!delivery ? (
-          <section className="panel p-8 text-center"><h2 className="text-xl font-bold">No delivery assigned</h2><p className="mt-2 text-sm text-mute">Approve an allocation to create a driver load.</p></section>
+          <section className="panel p-8 text-center"><h2 className="text-xl font-bold">{t("driver.noneTitle")}</h2><p className="mt-2 text-sm text-mute">{t("driver.noneBody")}</p></section>
         ) : (
           <div className="grid items-start gap-4 lg:grid-cols-[360px_minmax(0,1fr)]">
             <section className="panel overflow-hidden">
               <div className="border-b border-line p-5">
                 <div className="flex items-start justify-between gap-3">
-                  <div><p className="text-xs font-semibold uppercase tracking-wider text-mute">Destination</p><h2 className="mt-1 text-2xl font-bold">{delivery.area}</h2></div>
-                  <span className={`rounded-ui px-2 py-1 text-xs font-semibold capitalize ${delivery.status === "delivered" ? "bg-done/10 text-done" : delivery.status === "in_transit" ? "bg-transit/10 text-transit" : "bg-paper"}`}>{delivery.status.replace("_", " ")}</span>
+                  <div><p className="text-xs font-semibold uppercase tracking-wider text-mute">{t("driver.destination")}</p><h2 className="mt-1 text-2xl font-bold">{place(delivery.area)}</h2></div>
+                  <span className={`rounded-ui px-2 py-1 text-xs font-semibold ${delivery.status === "delivered" ? "bg-done/10 text-done" : delivery.status === "in_transit" ? "bg-transit/10 text-transit" : "bg-paper"}`}>{statusName(delivery.status)}</span>
                 </div>
-                <p className="mt-2 text-sm text-mute">From {delivery.depotName} · {delivery.distanceKm} km · {delivery.etaMin} min</p>
+                <p className="mt-2 text-sm text-mute">{t("driver.routeLine", { depot: place(delivery.depotName), km: num(delivery.distanceKm), min: num(delivery.etaMin) })}</p>
               </div>
 
               <div className="p-5">
-                <div className="flex justify-between text-sm"><span className="text-mute">Trip progress</span><strong>{delivery.progressPct}%</strong></div>
+                <div className="flex justify-between text-sm"><span className="text-mute">{t("driver.progress")}</span><strong dir="ltr">{delivery.progressPct}%</strong></div>
                 <div className="mt-2 h-3 overflow-hidden rounded-full bg-line"><div className={`h-full rounded-full transition-all ${delivery.status === "delivered" ? "bg-done" : "bg-transit"}`} style={{ width: `${delivery.progressPct}%` }} /></div>
                 {delivery.status === "in_transit" && delivery.progressPct >= 96 && (
                   <p role="status" className="mt-3 rounded-ui border border-done/20 bg-done/10 px-3 py-2 text-sm font-semibold text-done">
-                    Arrived at the destination. Confirm the handover below.
+                    {t("driver.arrivedNotice")}
                   </p>
                 )}
 
-                <h3 className="mt-5 font-bold">Load</h3>
+                <h3 className="mt-5 font-bold">{t("driver.load")}</h3>
                 <ul className="mt-2 divide-y divide-line rounded-ui border border-line">
-                  {delivery.items.map((item) => <li key={item.item} className="flex justify-between px-3 py-2 text-sm"><span>{ITEM_LABEL[item.item]}</span><strong>{item.qty} units</strong></li>)}
+                  {delivery.items.map((item) => <li key={item.item} className="flex justify-between px-3 py-2 text-sm"><span>{itemName(item.item)}</span><strong>{t("common.unitsValue", { n: num(item.qty) })}</strong></li>)}
                 </ul>
 
                 <div className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
                   <button className="btn-primary w-full" onClick={startTrip} disabled={working || delivery.status !== "approved"}>
-                    {delivery.status === "approved" ? "Start trip" : delivery.status === "in_transit" ? "Trip started" : "Trip completed"}
+                    {delivery.status === "approved" ? t("driver.startTrip") : delivery.status === "in_transit" ? t("driver.tripStarted") : t("driver.tripCompleted")}
                   </button>
                   <button className="btn-lime w-full" onClick={markDelivered} disabled={working || delivery.status !== "in_transit"}>
-                    {delivery.status === "delivered" ? "Delivered" : "Mark delivered"}
+                    {delivery.status === "delivered" ? t("driver.delivered") : t("driver.markDelivered")}
                   </button>
                 </div>
-                <p className="mt-3 text-center text-xs text-mute">Updates every 2 seconds · {connection.mode} fallback active</p>
+                <p className="mt-3 text-center text-xs text-mute">{t("driver.updates", { mode: t(`common.mode.${connection.mode}`) })}</p>
               </div>
             </section>
 
             <section className="panel overflow-hidden">
-              <div className="border-b border-line px-4 py-3"><h2 className="font-bold">Route and truck position</h2><p className="text-xs text-mute">The truck marker moves while the trip is active.</p></div>
+              <div className="border-b border-line px-4 py-3"><h2 className="font-bold">{t("driver.mapTitle")}</h2><p className="text-xs text-mute">{t("driver.mapHelp")}</p></div>
               <div className="h-[520px] min-h-[420px]">
                 <MapView requests={request ? [request] : []} depots={depot ? [depot] : []} selectedId={request?.id}>
                   <RouteLayer routes={route ? [route] : []} selectedId={request?.id} />
